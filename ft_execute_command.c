@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/03 19:54:03 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/04 04:22:36 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,19 @@ static void	ft_setup_command(char *cmd)
 	i = 0;
 	while (cmd[i])
 	{
-		if ((cmd[i] == '\'' || cmd[i] == '"') && (!i || cmd[i - 1] == ' '))
+		if (cmd[i] == '\'' || cmd[i] == '"')
 		{
 			c = cmd[i];
-			j = i;
-			while (cmd[++j] && cmd[j] != c)
-				if (cmd[j] == ' ')
-					cmd[j] = '\n';
-			if (cmd[j] == c)
+			j = i + 1;
+			while (cmd[j] && cmd[j] != c)
+				++j;
+			if (c == cmd[j])
 			{
 				cmd[i] = ' ';
+				while ((++i) < j)
+					if (cmd[i] == ' ')
+						cmd[i] = '\n';
 				cmd[j] = ' ';
-				i = j;
 			}
 		}
 		++i;
@@ -77,9 +78,11 @@ static char	*ft_realpath(char **env, char *filename, char *filename_path)
 	if (!filename_path)
 		return (ft_strdup(filename));
 	i = 0;
-	while (ft_strncmp(env[i], "PATH=", 5))
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
 		++i;
-	envpath = ft_split(env[i] + 5, ':');
+	envpath = NULL;
+	if (env[i])
+		envpath = ft_split(env[i] + 5, ':');
 	if (!envpath || !filename_path)
 		return (free(filename_path), ft_strdup(filename));
 	i = 0;
@@ -90,8 +93,7 @@ static char	*ft_realpath(char **env, char *filename, char *filename_path)
 			return (free(filename_path), ft_free_tab(envpath), NULL);
 		if (!access(filepath, X_OK))
 			return (free(filename_path), ft_free_tab(envpath), filepath);
-		free(filepath);
-		++i;
+		(free(filepath), ++i);
 	}
 	return (free(filename_path), ft_free_tab(envpath), ft_strdup(filename));
 }
