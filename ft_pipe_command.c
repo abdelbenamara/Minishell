@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pipe_commands.c                                 :+:      :+:    :+:   */
+/*   ft_pipe_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/03 20:24:31 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/05 03:38:22 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ static uint8_t	ft_handle_input(t_list **cmds, int *writefd)
 	return (1);
 }
 
-static void	ft_child_do(t_list **cmds, char **env, int *writefd, int *readfd)
+static void	ft_child_do(t_list **cmds, t_list **env, int *writefd, int *readfd)
 {
-	int		exit_code;
+	int		code;
 
 	if (close(writefd[1]) == -1)
 		(perror("close"), exit(EXIT_FAILURE));
@@ -51,15 +51,16 @@ static void	ft_child_do(t_list **cmds, char **env, int *writefd, int *readfd)
 		(perror("close"), exit(EXIT_FAILURE));
 	if (dup2(readfd[1], STDOUT_FILENO) == -1)
 		(perror("dup2"), exit(EXIT_FAILURE));
-	exit_code = EXIT_SUCCESS;
+	code = EXIT_SUCCESS;
 	if (*cmds)
-		exit_code = ft_execute_command((*cmds)->content, env);
+		code = ft_execute_command((*cmds)->content, env);
 	if (close(writefd[0]) == -1)
 		(perror("close"), exit(EXIT_FAILURE));
 	if (close(readfd[1]) == -1)
 		(perror("close"), exit(EXIT_FAILURE));
 	ft_lstclear(cmds, &free);
-	exit(exit_code);
+	ft_lstclear(env, &free);
+	exit(code);
 }
 
 static void	ft_handle_output(t_list **cmds, int *readfd)
@@ -117,31 +118,30 @@ static uint8_t	ft_parent_do(t_list **cmds, int *writefd, int *readfd)
 	return (1);
 }
 
-int	ft_pipe_commands(t_list **cmds, char **env, int *writefd, int *readfd)
+int	ft_pipe_command(t_list **cmds, t_list **env, int *writefd, int *readfd)
 {
 	pid_t	cpid;
 	int		wstatus;
 
 	if (!ft_handle_input(cmds, writefd))
-		(ft_lstclear(cmds, &free), exit(EXIT_FAILURE));
+		return (-1);
 	if (pipe(readfd) == -1)
-		(perror("pipe"), ft_lstclear(cmds, &free), exit(EXIT_FAILURE));
+		return (perror("pipe"), -1);
 	cpid = fork();
 	if (cpid == -1)
-		(perror("fork"), ft_lstclear(cmds, &free), exit(EXIT_FAILURE));
+		return (perror("fork"), -1);
 	if (!cpid)
 		ft_child_do(cmds, env, writefd, readfd);
 	else
 	{
 		if (close(writefd[1]) == -1)
-			(perror("close"), ft_lstclear(cmds, &free), exit(EXIT_FAILURE));
+			return (perror("close"), -1);
 		if (waitpid(cpid, &wstatus, 0) == -1)
-			(perror((*cmds)->content), \
-				ft_lstclear(cmds, &free), exit(EXIT_FAILURE));
+			return (perror((*cmds)->content), -1);
 		if (!ft_parent_do(cmds, writefd, readfd))
-			(ft_lstclear(cmds, &free), exit(EXIT_FAILURE));
+			return (-1);
 		if (*cmds)
-			wstatus = ft_pipe_commands(cmds, env, writefd, readfd);
+			wstatus = ft_pipe_command(cmds, env, writefd, readfd);
 	}
 	return (wstatus);
 }
