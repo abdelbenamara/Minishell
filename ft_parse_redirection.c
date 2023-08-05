@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_parse_redirections.c                            :+:      :+:    :+:   */
+/*   ft_parse_redirection.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 20:01:24 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/04 02:46:07 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/05 03:00:31 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ char	*ft_parse_redirection(char c, char *cmd, t_list **cmds)
 	size_t	j;
 	char	*tmp;
 
+	if (!cmd)
+		return (NULL);
 	str = ft_strchr(cmd, c);
 	while (str)
 	{
