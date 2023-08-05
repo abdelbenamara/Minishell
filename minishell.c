@@ -6,68 +6,82 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/03 19:59:52 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/05 21:13:57 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_get_home(char **env)
+static void	ft_init_env(char **ep, t_list **env)
 {
-	int	i;
+	size_t	i;
+	char	*var;
 
 	i = 0;
-	while (env[i] && ft_strncmp(env[i], "HOME=", 5))
+	while (ep[i])
+	{
+		var = ft_strdup(ep[i]);
+		if (var)
+			ft_lstadd_front(env, ft_lstnew(var));
 		++i;
-	if (env[i])
-		return (env[i] + 5);
-	return (NULL);
+	}
+	ft_env_put(env, "?", "0");
 }
 
-static char	*ft_get_prompt(const char *home, size_t home_len)
+static char	*ft_get_prompt(t_list **env)
 {
-	char	*cwd;
-	char	*tmp;
-	char	*prompt;
+	const char	*home = ft_env_get(env, "HOME");
+	size_t		len;
+	char		*cwd;
+	char		*tmp;
+	char		*prompt;
 
+	len = 0;
+	if (home)
+		len = ft_strlen(home);
 	cwd = getcwd(NULL, 0);
 	tmp = NULL;
-	if (home && !ft_strncmp(cwd, home, home_len))
-		tmp = ft_strjoin("~", cwd + home_len);
+	if (home && !ft_strncmp(cwd, home, len))
+		tmp = ft_strjoin("~", cwd + len);
 	if (tmp)
-		(free(cwd), cwd = tmp);
-	tmp = ft_strjoin(cwd, " $ \033[00m");
-	prompt = ft_strjoin("\033[01;35mminishell\033[00m:\033[01;34m", tmp);
+	{
+		free(cwd);
+		cwd = ft_strjoin(tmp, " $ \033[00m");
+		free(tmp);
+	}
+	if (ft_atoi(ft_env_get(env, "?")))
+		prompt = ft_strjoin(FAILURE "\033[00m " PROMPT, cwd);
+	else
+		prompt = ft_strjoin(SUCCESS "\033[00m " PROMPT, cwd);
 	free(cwd);
-	free(tmp);
 	return (prompt);
 }
 
-int	main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **ep)
 {
-	const char	*home = ft_get_home(env);
-	size_t		home_len;
-	char		*line;
-	char		*prompt;
-	int			exit_code;
+	t_list	*env;
+	char	*line;
+	char	*code;
+	char	*prompt;
 
-	(void) ac;
-	(void) av;
-	home_len = 0;
-	if (home)
-		home_len = ft_strlen(home);
+	((void) ac, (void) av);
+	env = NULL;
+	ft_init_env(ep, &env);
 	line = NULL;
-	exit_code = 0;
 	while (!line || ft_strncmp(line, "exit", 5))
 	{
 		free(line);
-		prompt = ft_get_prompt(home, home_len);
+		prompt = ft_get_prompt(&env);
 		line = readline(prompt);
 		free(prompt);
 		if (line && *line)
-			(add_history(line), exit_code = ft_process_line(line, env));
-		ft_printf("\033[01;33m[DEBUG] exit code : %d\033[00m\n", exit_code);
+			(add_history(line), code = ft_itoa(ft_process_line(line, &env)));
+		else
+			code = ft_itoa(0);
+		ft_env_put(&env, "?", code);
+		free(code);
 	}
+	ft_lstclear(&env, &free);
 	free(line);
 	return (0);
 }
