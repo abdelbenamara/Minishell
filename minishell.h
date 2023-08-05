@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/03 20:24:31 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/05 20:57:14 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+# ifndef FAILURE
+#  define FAILURE	"\033[01;31mx"
+# endif
+
+# ifndef SUCCESS
+#  define SUCCESS	"\033[01;32mo"
+# endif
+
+# ifndef PROMPT
+#  define PROMPT	"\033[01;33mminishell\033[00m:\033[01;34m"
+# endif
+
+void	ft_free_tab(char **tab);
+char	*ft_env_get(t_list **env, char *key);
+void	ft_env_put(t_list **env, char *key, char *value);
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
 
 /* ************************************************************************** */
@@ -52,8 +67,8 @@ void	ft_redirect_output(char *filename, int openflag, int *readfd);
 /* ************************************************************************** */
 
 char	*ft_parse_redirection(char c, char *cmd, t_list **cmds);
-int		ft_execute_command(char *cmd, char **env);
-int		ft_pipe_commands(t_list **cmds, char **env, int *writefd, int *readfd);
-int		ft_process_line(char *line, char **env);
+int		ft_execute_command(char *cmd, t_list **env);
+int		ft_pipe_command(t_list **cmds, t_list **env, int *writefd, int *readfd);
+int		ft_process_line(char *line, t_list **env);
 
 #endif
