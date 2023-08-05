@@ -6,32 +6,31 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/04 16:15:45 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/05 22:47:55 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*ft_expand_variable(char *line, size_t *i, char **env)
+static char	*ft_expand_variable(char *line, size_t *i, t_list **env)
 {
-	char	*var;
-	size_t	len;
 	size_t	j;
+	char	*key;
+	char	*var;
 
 	j = 1;
-	while (ft_isalnum(line[*i + j]))
+	while (ft_isalnum(line[(*i) + j]) || line[(*i) + j] == '?')
 		++j;
-	var = ft_substr(line, *i + 1, j - 1);
-	*i += j;
-	if (!var)
+	if (!(line[(*i) + j]) && j == 1)
+		return (++(*i), ft_strdup("$"));
+	key = ft_substr(line, (*i) + 1, j - 1);
+	(*i) += j;
+	if (!key)
 		return (NULL);
-	len = ft_strlen(var);
-	j = 0;
-	while (env[j] && (ft_strncmp(env[j], var, len) || env[j][len] != '='))
-		++j;
-	free(var);
-	if (env[j])
-		return (ft_strdup(env[j] + len + 1));
+	var = ft_env_get(env, key);
+	free(key);
+	if (var)
+		return (ft_strdup(var));
 	return (NULL);
 }
 
@@ -51,7 +50,7 @@ static char	*ft_strjoin_and_free(char *s1, char *s2)
 	return (str);
 }
 
-static char	*ft_real_line(char *line, char **env)
+static char	*ft_expand_line(char *line, t_list **env)
 {
 	char	*str;
 	size_t	i;
@@ -75,30 +74,28 @@ static char	*ft_real_line(char *line, char **env)
 	if (line[i] == '$')
 	{
 		str = ft_strjoin_and_free(str, ft_expand_variable(line, &i, env));
-		str = ft_strjoin_and_free(str, ft_real_line(line + i, env));
+		str = ft_strjoin_and_free(str, ft_expand_line(line + i, env));
 	}
 	return (str);
 }
 
-static void	ft_parse_commands(char *line, t_list **cmds)
+static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 {
 	char	**strs;
 	size_t	i;
 	t_list	*lst;
 
-	strs = ft_split(line, '|');
+	strs = ft_split(eline, '|');
 	if (!strs)
-		return (free(line));
+		return (free(eline), 0);
 	i = 0;
 	while (strs[i])
 	{
 		strs[i] = ft_parse_redirection('<', strs[i], cmds);
-		if (!(strs[i]))
-			return (free(line));
 		lst = NULL;
 		strs[i] = ft_parse_redirection('>', strs[i], &lst);
 		if (!(strs[i]))
-			return (free(line));
+			return (free(eline), ft_free_tab(strs + i + 1), 0);
 		if (*(strs[i]))
 			ft_lstadd_back(cmds, ft_lstnew(strs[i]));
 		else
@@ -106,10 +103,10 @@ static void	ft_parse_commands(char *line, t_list **cmds)
 		ft_lstadd_back(cmds, lst);
 		++i;
 	}
-	return (free(line), free(strs));
+	return (free(eline), free(strs), 1);
 }
 
-int	ft_process_line(char *line, char **env)
+int	ft_process_line(char *line, t_list **env)
 {
 	t_list	*cmds;
 	int		writefd[2];
@@ -118,16 +115,19 @@ int	ft_process_line(char *line, char **env)
 	t_list	*lst;
 
 	cmds = NULL;
-	ft_parse_commands(ft_real_line(line, env), &cmds);
+	if (!ft_parse_commands(ft_expand_line(line, env), &cmds))
+		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
 	if (!cmds)
 		return (EXIT_SUCCESS);
-	ft_printf("\033[01;33m[DEBUG] cmds : [ %s", cmds->content);
+	ft_printf("\033[01;35m[DEBUG] cmds : [ %s", cmds->content);
 	lst = cmds->next;
 	while (lst)
 		(ft_printf(", %s", lst->content), lst = lst->next);
 	ft_printf(" ]\033[00m\n");
 	if (pipe(writefd) == -1)
 		return (perror("pipe"), ft_lstclear(&cmds, &free), 1);
-	wstatus = ft_pipe_commands(&cmds, env, writefd, readfd);
+	wstatus = ft_pipe_command(&cmds, env, writefd, readfd);
+	if (wstatus == -1)
+		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
 	return (WEXITSTATUS(wstatus));
 }
