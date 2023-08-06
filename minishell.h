@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/05 20:57:14 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/06 19:58:08 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include <string.h>
 # include <sys/stat.h>
 # include <sys/types.h>
@@ -38,7 +39,7 @@
 # endif
 
 # ifndef PROMPT
-#  define PROMPT	"\033[01;33mminishell\033[00m:\033[01;34m"
+#  define PROMPT	"\033[00m \033[01;33mminishell\033[00m:\033[01;34m"
 # endif
 
 void	ft_free_tab(char **tab);
@@ -57,8 +58,8 @@ void	ft_lst_pop(t_list **lst, void (*del)(void *));
 # endif
 
 void	ft_here_document(char *limiter, int *writefd);
-void	ft_redirect_input(char *filename, int *writefd);
-void	ft_redirect_output(char *filename, int openflag, int *readfd);
+uint8_t	ft_redirect_input(char *filename, int *writefd);
+uint8_t	ft_redirect_output(char *filename, int openflag, int *readfd);
 
 /* ************************************************************************** */
 /*                                                                            */
