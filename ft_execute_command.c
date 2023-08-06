@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/06 18:42:38 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/06 22:23:38 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,13 @@ static char	**ft_env_to_tab(t_list **env)
 	return (tab);
 }
 
-static void	ft_clean_arguments(char **argv)
+static char	**ft_clean_arguments(char **argv)
 {
 	size_t	i;
 	size_t	j;
 
+	if (!argv)
+		return (NULL);
 	i = 0;
 	while (argv[i])
 	{
@@ -82,6 +84,7 @@ static void	ft_clean_arguments(char **argv)
 		}
 		++i;
 	}
+	return (argv);
 }
 
 static char	*ft_realpath(t_list **env, char *filename, char *filename_path)
@@ -93,7 +96,7 @@ static char	*ft_realpath(t_list **env, char *filename, char *filename_path)
 	if (!filename_path)
 		return (ft_strdup(filename));
 	envpath = ft_split(ft_env_get(env, "PATH"), ':');
-	if (!envpath || !filename_path)
+	if (!envpath)
 		return (free(filename_path), ft_strdup(filename));
 	i = 0;
 	while (envpath[i])
@@ -116,21 +119,21 @@ int	ft_execute_command(char *cmd, t_list **env)
 	char	*path;
 
 	envp = ft_env_to_tab(env);
-	argv = ft_split(ft_setup_command(cmd), ' ');
+	argv = ft_clean_arguments(ft_split(ft_setup_command(cmd), ' '));
 	if (!argv)
 		return (free(envp), EXIT_FAILURE);
-	ft_clean_arguments(argv);
 	path = ft_realpath(env, argv[0], ft_strjoin("/", argv[0]));
 	if (!path)
 		return (free(envp), ft_free_tab(argv), EXIT_FAILURE);
-	if ((ft_strncmp(path, "../", 3) && ft_strncmp(path, "./", 2)
-			&& ft_strncmp(path, "/", 1))
-		|| access(path, F_OK) == -1)
+	if (ft_strncmp(path, "../", 3) && ft_strncmp(path, "./", 2)
+		&& ft_strncmp(path, "/", 1) && access(path, F_OK) == -1)
 		return (ft_dprintf(STDERR_FILENO, "%s: command not found\n", path), \
 			free(envp), ft_free_tab(argv), free(path), 127);
-	else if (access(path, X_OK) == -1)
+	if (access(path, F_OK) == -1)
+		return (perror(path), free(envp), ft_free_tab(argv), free(path), 127);
+	if (access(path, X_OK) == -1)
 		return (perror(path), free(envp), ft_free_tab(argv), free(path), 126);
-	else if (execve(path, argv, envp) == -1)
+	if (execve(path, argv, envp) == -1)
 		return (perror(path), \
 			free(envp), ft_free_tab(argv), free(path), EXIT_FAILURE);
 	return (free(envp), ft_free_tab(argv), free(path), EXIT_SUCCESS);
