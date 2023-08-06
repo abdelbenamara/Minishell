@@ -6,26 +6,29 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/05 21:13:57 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/06 13:22:42 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_init_env(char **ep, t_list **env)
+static t_list	*ft_init_env(char **ep)
 {
+	t_list	*lst;
 	size_t	i;
 	char	*var;
 
+	lst = NULL;
 	i = 0;
 	while (ep[i])
 	{
 		var = ft_strdup(ep[i]);
 		if (var)
-			ft_lstadd_front(env, ft_lstnew(var));
+			ft_lstadd_front(&lst, ft_lstnew(var));
 		++i;
 	}
-	ft_env_put(env, "?", "0");
+	ft_env_put(&lst, "?", "0");
+	return (lst);
 }
 
 static char	*ft_get_prompt(t_list **env)
@@ -65,10 +68,9 @@ int	main(int ac, char **av, char **ep)
 	char	*prompt;
 
 	((void) ac, (void) av);
-	env = NULL;
-	ft_init_env(ep, &env);
-	line = NULL;
-	while (!line || ft_strncmp(line, "exit", 5))
+	env = ft_init_env(ep);
+	line = ft_strdup("");
+	while (line)
 	{
 		free(line);
 		prompt = ft_get_prompt(&env);
@@ -83,5 +85,5 @@ int	main(int ac, char **av, char **ep)
 	}
 	ft_lstclear(&env, &free);
 	free(line);
-	return (0);
+	return (ft_printf("exit\n"), 0);
 }
