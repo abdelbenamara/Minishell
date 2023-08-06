@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/06 19:19:49 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/06 22:35:51 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char	*ft_expand_variable(char *line, size_t *i, t_list **env)
 		++k;
 	if ((j > 0 && !ft_strncmp(line + j - 1, "<<", 2)
 			&& (j == 1 || line[j - 2] != '<'))
-		|| (!(line[(*i) + k]) && k == 1))
+		|| (k == 1))
 		return (++(*i), ft_strdup("$"));
 	key = ft_substr(line, (*i) + 1, k - 1);
 	(*i) += k;
