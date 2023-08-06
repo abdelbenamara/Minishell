@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/05 22:51:34 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/06 18:42:38 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,6 @@ int	ft_execute_command(char *cmd, t_list **env)
 	path = ft_realpath(env, argv[0], ft_strjoin("/", argv[0]));
 	if (!path)
 		return (free(envp), ft_free_tab(argv), EXIT_FAILURE);
-	if (!ft_strncmp(path, ">>", 3) || !ft_strncmp(path, ">", 2))
-		return (free(envp), ft_free_tab(argv), free(path), EXIT_SUCCESS);
 	if ((ft_strncmp(path, "../", 3) && ft_strncmp(path, "./", 2)
 			&& ft_strncmp(path, "/", 1))
 		|| access(path, F_OK) == -1)
