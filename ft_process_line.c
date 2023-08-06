@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/05 22:47:55 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/06 19:19:49 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,30 @@
 static char	*ft_expand_variable(char *line, size_t *i, t_list **env)
 {
 	size_t	j;
+	size_t	k;
 	char	*key;
 	char	*var;
 
-	j = 1;
-	while (ft_isalnum(line[(*i) + j]) || line[(*i) + j] == '?')
-		++j;
-	if (!(line[(*i) + j]) && j == 1)
+	j = (*i);
+	if (j > 0)
+		--j;
+	while (j > 0 && line[j] == ' ')
+		--j;
+	k = 1;
+	while (ft_isalnum(line[(*i) + k]) || line[(*i) + k] == '?')
+		++k;
+	if ((j > 0 && !ft_strncmp(line + j - 1, "<<", 2)
+			&& (j == 1 || line[j - 2] != '<'))
+		|| (!(line[(*i) + k]) && k == 1))
 		return (++(*i), ft_strdup("$"));
-	key = ft_substr(line, (*i) + 1, j - 1);
-	(*i) += j;
+	key = ft_substr(line, (*i) + 1, k - 1);
+	(*i) += k;
 	if (!key)
 		return (NULL);
 	var = ft_env_get(env, key);
-	free(key);
 	if (var)
-		return (ft_strdup(var));
-	return (NULL);
+		return (free(key), ft_strdup(var));
+	return (free(key), NULL);
 }
 
 static char	*ft_strjoin_and_free(char *s1, char *s2)
@@ -91,6 +98,8 @@ static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 	i = 0;
 	while (strs[i])
 	{
+		if (i > 0)
+			ft_lstadd_back(cmds, ft_lstnew(ft_strdup("|")));
 		strs[i] = ft_parse_redirection('<', strs[i], cmds);
 		lst = NULL;
 		strs[i] = ft_parse_redirection('>', strs[i], &lst);
@@ -126,7 +135,8 @@ int	ft_process_line(char *line, t_list **env)
 	ft_printf(" ]\033[00m\n");
 	if (pipe(writefd) == -1)
 		return (perror("pipe"), ft_lstclear(&cmds, &free), 1);
-	wstatus = ft_pipe_command(&cmds, env, writefd, readfd);
+	while (cmds)
+		wstatus = ft_pipe_command(&cmds, env, writefd, readfd);
 	if (wstatus == -1)
 		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
 	return (WEXITSTATUS(wstatus));
