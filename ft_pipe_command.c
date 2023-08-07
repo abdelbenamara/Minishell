@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 04:50:23 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 18:16:41 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ static uint8_t	ft_handle_input(t_list **cmds, int *writefd)
 		return (perror("pipe"), 0);
 	ft_lst_pop(cmds, &free);
 	if (here_doc)
-		ft_here_document((*cmds)->content, writefd);
-	else
 	{
-		if (!ft_redirect_input((*cmds)->content, writefd))
-		{
-			while (*cmds && ft_strncmp((*cmds)->content, "|", 2))
-				ft_lst_pop(cmds, &free);
-			return (ft_lst_pop(cmds, &free), 0);
-		}
+		if (!ft_here_document((*cmds)->content, writefd))
+			return (ft_lstclear(cmds, &free), 0);
+	}
+	else if (!ft_redirect_input((*cmds)->content, writefd))
+	{
+		while (*cmds && ft_strncmp((*cmds)->content, "|", 2))
+			ft_lst_pop(cmds, &free);
+		return (ft_lst_pop(cmds, &free), 0);
 	}
 	return (ft_lst_pop(cmds, &free), 1);
 }
@@ -123,10 +123,10 @@ int	ft_pipe_command(t_list **cmds, t_list **env, int *writefd, int *readfd)
 	pid_t	cpid;
 	int		wstatus;
 
-	if (!ft_handle_input(cmds, writefd))
-		return (-1);
 	if (pipe(readfd) == -1)
 		return (perror("pipe"), -1);
+	if (!ft_handle_input(cmds, writefd))
+		return (-1);
 	cpid = fork();
 	if (cpid == -1)
 		return (perror("fork"), -1);
