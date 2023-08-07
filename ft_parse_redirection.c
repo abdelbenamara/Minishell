@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 20:01:24 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/05 03:00:31 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 19:29:54 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static size_t	ft_add_redirection(char *cmd, t_list **cmds)
 	while (cmd[i] && cmd[i] == ' ')
 		++i;
 	c = cmd[i];
+	if (!c)
+		return (i);
 	j = 1;
 	if (c == '\'' || c == '"')
 		while (cmd[i + j] && cmd[i + j] != c)
