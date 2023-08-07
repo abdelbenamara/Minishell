@@ -15,7 +15,7 @@ make bonus
 - [x] Have a working history.
 - [x] Search and launch the right executable (based on the PATH variable or using a
 relative or an absolute path). 
-- [ ] Avoid using more than one global variable to indicate a received signal. Consider
+- [x] Avoid using more than one global variable to indicate a received signal. Consider
 the implications: this approach ensures that your signal handler will not access your
 main data structures.
 - [x] Not interpret unclosed quotes or special characters which are not required by the
