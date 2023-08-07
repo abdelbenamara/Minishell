@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 16:33:07 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 21:26:25 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,31 +115,40 @@ static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 	return (free(eline), free(strs), 1);
 }
 
-int	ft_process_line(char *line, t_list **env)
-{
-	t_list	*cmds;
-	int		writefd[2];
-	int		readfd[2];
-	int		wstatus;
+/*
 	t_list	*lst;
 
-	cmds = NULL;
-	if (!ft_parse_commands(ft_expand_line(line, env), &cmds))
-		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
-	if (!cmds)
-		return (EXIT_SUCCESS);
 	ft_printf("\033[01;35m[DEBUG] cmds : [ %s", cmds->content);
 	lst = cmds->next;
 	while (lst)
 		(ft_printf(", %s", lst->content), lst = lst->next);
 	ft_printf(" ]\033[00m\n");
+*/
+int	ft_process_line(char *line, t_list **env)
+{
+	char	*str;
+	int		wstatus;
+	t_list	*cmds;
+	int		writefd[2];
+	int		readfd[2];
+
+	str = ft_strtrim(line, " ");
+	if (!str || str[0] == '|' || str[ft_strlen(str) - 1] == '|')
+		return (ft_printf("syntax error near unexpected token `|'\n"), \
+			free(str), 2);
+	free(str);
+	cmds = NULL;
+	if (!ft_parse_commands(ft_expand_line(line, env), &cmds))
+		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
+	if (!cmds)
+		return (EXIT_SUCCESS);
 	if (pipe(writefd) == -1)
 		return (perror("pipe"), ft_lstclear(&cmds, &free), 1);
-	while (cmds)
+	wstatus = 0;
+	while (cmds && wstatus > -2)
 		wstatus = ft_pipe_command(&cmds, env, writefd, readfd);
-	if (wstatus == -1)
-		return (close(writefd[0]), close(writefd[1]), \
-			close(readfd[0]), close(readfd[1]), \
-			ft_lstclear(&cmds, &free), EXIT_FAILURE);
+	if (wstatus < 0)
+		return (close(writefd[0]), close(writefd[1]), close(readfd[0]), \
+			close(readfd[1]), ft_lstclear(&cmds, &free), (-1 * wstatus));
 	return (WEXITSTATUS(wstatus));
 }
