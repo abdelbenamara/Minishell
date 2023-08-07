@@ -6,11 +6,35 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/06 20:28:06 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 04:55:43 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	ft_rl_redisplay(int signum)
+{
+	(void) signum;
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+static void	ft_setup_sigaction(void)
+{
+	struct sigaction	int_act;
+	struct sigaction	quit_act;
+
+	int_act.sa_handler = &ft_rl_redisplay;
+	int_act.sa_flags = 0;
+	sigemptyset(&(int_act.sa_mask));
+	sigaction(SIGINT, &int_act, NULL);
+	quit_act.sa_handler = SIG_IGN;
+	quit_act.sa_flags = 0;
+	sigemptyset(&(quit_act.sa_mask));
+	sigaction(SIGQUIT, &quit_act, NULL);
+}
 
 static t_list	*ft_init_env(char **ep)
 {
@@ -65,6 +89,7 @@ int	main(int ac, char **av, char **ep)
 	char	*prompt;
 
 	((void) ac, (void) av);
+	ft_setup_sigaction();
 	env = ft_init_env(ep);
 	line = ft_strdup("");
 	while (line)
