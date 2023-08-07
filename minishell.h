@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 04:33:28 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 17:00:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@
 #  define PROMPT	"\033[00m \033[01;33mminishell\033[00m:\033[01;34m"
 # endif
 
+extern int	g_signum;
+
+int		ft_event_hook(void);
 void	ft_free_tab(char **tab);
 char	*ft_env_get(t_list **env, char *key);
 void	ft_env_put(t_list **env, char *key, char *value);
@@ -59,7 +62,7 @@ void	ft_lst_pop(t_list **lst, void (*del)(void *));
 #  define DLINES_MAX	32
 # endif
 
-void	ft_here_document(char *limiter, int *writefd);
+uint8_t	ft_here_document(char *limiter, int *writefd);
 uint8_t	ft_redirect_input(char *filename, int *writefd);
 uint8_t	ft_redirect_output(char *filename, int openflag, int *readfd);
 
