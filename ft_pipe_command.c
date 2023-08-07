@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/06 22:32:10 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 04:50:23 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,18 @@ static uint8_t	ft_handle_input(t_list **cmds, int *writefd)
 
 static void	ft_child_do(t_list **cmds, t_list **env, int *writefd, int *readfd)
 {
-	int		code;
-	char	*cmd;
+	static void	(*lc)(t_list **, void (*)(void *)) = &ft_lstclear;
+	int			code;
+	char		*cmd;
 
 	if (close(writefd[1]) == -1)
-		(perror("close"), exit(EXIT_FAILURE));
+		(perror("close"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
 	if (dup2(writefd[0], STDIN_FILENO) == -1)
-		(perror("dup2"), exit(EXIT_FAILURE));
+		(perror("dup2"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
 	if (close(readfd[0]) == -1)
-		(perror("close"), exit(EXIT_FAILURE));
+		(perror("close"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
 	if (dup2(readfd[1], STDOUT_FILENO) == -1)
-		(perror("dup2"), exit(EXIT_FAILURE));
+		(perror("dup2"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
 	code = EXIT_SUCCESS;
 	cmd = NULL;
 	if (*cmds)
@@ -60,12 +61,10 @@ static void	ft_child_do(t_list **cmds, t_list **env, int *writefd, int *readfd)
 		&& ft_strncmp(cmd, ">>", 3) && ft_strncmp(cmd, ">", 2))
 		code = ft_execute_command(cmd, env);
 	if (close(writefd[0]) == -1)
-		(perror("close"), exit(EXIT_FAILURE));
+		(perror("close"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
 	if (close(readfd[1]) == -1)
-		(perror("close"), exit(EXIT_FAILURE));
-	ft_lstclear(cmds, &free);
-	ft_lstclear(env, &free);
-	exit(code);
+		(perror("close"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
+	(lc(cmds, &free), lc(env, &free), exit(code));
 }
 
 static uint8_t	ft_handle_output(t_list **cmds, int *readfd, int fd)
