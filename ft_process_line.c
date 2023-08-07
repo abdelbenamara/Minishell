@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/06 22:35:51 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 16:33:07 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ int	ft_process_line(char *line, t_list **env)
 	while (cmds)
 		wstatus = ft_pipe_command(&cmds, env, writefd, readfd);
 	if (wstatus == -1)
-		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
+		return (close(writefd[0]), close(writefd[1]), \
+			close(readfd[0]), close(readfd[1]), \
+			ft_lstclear(&cmds, &free), EXIT_FAILURE);
 	return (WEXITSTATUS(wstatus));
 }
