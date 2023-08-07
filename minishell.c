@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 16:43:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/07 20:32:18 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,6 @@ int	main(int ac, char **av, char **ep)
 		if (!g_signum && line && *line)
 			(add_history(line), code = ft_itoa(ft_process_line(line, &env)), \
 				ft_env_put(&env, "?", code), free(code));
-		else
-			ft_env_put(&env, "?", "0");
 		if (g_signum == SIGINT)
 			ft_env_put(&env, "?", "130");
 	}
