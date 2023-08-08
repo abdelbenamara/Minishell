@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 04:06:49 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:39:49 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,7 @@ int	ft_pipe_command(t_list **cmds, t_list **env, int *writefd, int *readfd)
 	if (pipe(readfd) == -1)
 		return (perror("pipe"), -1);
 	wstatus = ft_handle_input(cmds, writefd);
+	wstatus = ft_handle_exit(cmds, env, wstatus);
 	if (wstatus < 0)
 		return (wstatus);
 	cpid = fork();
