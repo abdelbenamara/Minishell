@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 04:49:40 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 18:22:08 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,24 @@
 #  define PROMPT	"\033[00m \033[01;33mminishell\033[00m:\033[01;34m"
 # endif
 
-extern int	g_signum;
-
-int		ft_event_hook(void);
-
 void	ft_free_tab(char **tab);
 
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
 
 char	*ft_env_gets(t_list **env, char *key);
+int		ft_env_geti(t_list **env, char *key);
 void	ft_env_puts(t_list **env, char *key, char *value);
 void	ft_env_puti(t_list **env, char *key, int value);
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                  signals                                   */
+/*                                                                            */
+/* ************************************************************************** */
+
+extern int	g_signum;
+
+void	ft_handle_signals(void);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -79,12 +86,12 @@ uint8_t	ft_redirect_output(char *filename, int openflag, int *readfd);
 int		ft_echo(char **argv, t_list **env);
 int		ft_pwd(char **argv, t_list **env);
 int		ft_env(char **argv, t_list **env);
+int		ft_exit(char **argv, t_list **env);
 int		ft_pass(char **argv, t_list **env);
 
 int		ft_cd(char *cmd, char **argv, t_list **env);
 int		ft_export(char *cmd, char **argv, t_list **env);
 int		ft_unset(char *cmd, char **argv, t_list **env);
-int		ft_exit(char *cmd, char **argv, t_list **env);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -96,6 +103,7 @@ char	*ft_parse_redirection(char c, char *cmd, t_list **cmds);
 
 char	**ft_parse_arguments(char *cmd);
 
+int		ft_handle_exit(t_list **cmds, t_list **env, int wstatus);
 int		ft_execute_builtin(char *cmd, t_list **env);
 int		ft_execute_command(char *cmd, t_list **env);
 
