@@ -20,12 +20,12 @@ the implications: this approach ensures that your signal handler will not access
 main data structures.
 - [x] Not interpret unclosed quotes or special characters which are not required by the
 subject such as \ (backslash) or ; (semicolon).
-- [x] Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-- [x] Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
-- [x] Implement redirections :
+- [ ] Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
+- [ ] Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
+- [ ] Implement redirections :
 	- [x] < should redirect input.
 	- [x] > should redirect output.
-	- [x] << should be given a delimiter, then read the input until a line containing the
+	- [ ] << should be given a delimiter, then read the input until a line containing the
 delimiter is seen. However, it doesn’t have to update the history!
 	- [x] >> should redirect output in append mode.
 - [x] Implement pipes (| character). The output of each command in the pipeline is
