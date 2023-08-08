@@ -6,40 +6,11 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/06 22:23:38 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 02:00:23 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*ft_setup_command(char *cmd)
-{
-	size_t	i;
-	size_t	j;
-	char	c;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == '\'' || cmd[i] == '"')
-		{
-			c = cmd[i];
-			j = i + 1;
-			while (cmd[j] && cmd[j] != c)
-				++j;
-			if (c == cmd[j])
-			{
-				cmd[i] = ' ';
-				while ((++i) < j)
-					if (cmd[i] == ' ')
-						cmd[i] = '\n';
-				cmd[j] = ' ';
-			}
-		}
-		++i;
-	}
-	return (cmd);
-}
 
 static char	**ft_env_to_tab(t_list **env)
 {
@@ -65,28 +36,6 @@ static char	**ft_env_to_tab(t_list **env)
 	return (tab);
 }
 
-static char	**ft_clean_arguments(char **argv)
-{
-	size_t	i;
-	size_t	j;
-
-	if (!argv)
-		return (NULL);
-	i = 0;
-	while (argv[i])
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (argv[i][j] == '\n')
-				argv[i][j] = ' ';
-			++j;
-		}
-		++i;
-	}
-	return (argv);
-}
-
 static char	*ft_realpath(t_list **env, char *filename, char *filename_path)
 {
 	char	**envpath;
@@ -95,7 +44,7 @@ static char	*ft_realpath(t_list **env, char *filename, char *filename_path)
 
 	if (!filename_path)
 		return (ft_strdup(filename));
-	envpath = ft_split(ft_env_get(env, "PATH"), ':');
+	envpath = ft_split(ft_env_gets(env, "PATH"), ':');
 	if (!envpath)
 		return (free(filename_path), ft_strdup(filename));
 	i = 0;
@@ -119,7 +68,7 @@ int	ft_execute_command(char *cmd, t_list **env)
 	char	*path;
 
 	envp = ft_env_to_tab(env);
-	argv = ft_clean_arguments(ft_split(ft_setup_command(cmd), ' '));
+	argv = ft_parse_arguments(cmd);
 	if (!argv)
 		return (free(envp), EXIT_FAILURE);
 	path = ft_realpath(env, argv[0], ft_strjoin("/", argv[0]));
