@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 21:26:25 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 02:00:23 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*ft_expand_variable(char *line, size_t *i, t_list **env)
 	(*i) += k;
 	if (!key)
 		return (NULL);
-	var = ft_env_get(env, key);
+	var = ft_env_gets(env, key);
 	if (var)
 		return (free(key), ft_strdup(var));
 	return (free(key), NULL);
