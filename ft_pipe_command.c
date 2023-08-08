@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 20:36:46 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 04:06:49 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ static void	ft_child_do(t_list **cmds, t_list **env, int *writefd, int *readfd)
 	cmd = NULL;
 	if (*cmds)
 		cmd = (*cmds)->content;
-	if (cmd && ft_strncmp(cmd, "|", 2)
-		&& ft_strncmp(cmd, ">>", 3) && ft_strncmp(cmd, ">", 2))
+	code = ft_execute_builtin(cmd, env);
+	if (code == 127)
 		code = ft_execute_command(cmd, env);
 	if (close(writefd[0]) == -1)
 		(perror("close"), lc(cmds, &free), lc(env, &free), exit(EXIT_FAILURE));
@@ -112,6 +112,8 @@ static int	ft_parent_do(t_list **cmds, int *writefd, int *readfd, int wstatus)
 	if (ft_strncmp(str, "|", 2)
 		&& ft_strncmp(str, ">>", 3) && ft_strncmp(str, ">", 2))
 		ft_lst_pop(cmds, &free);
+	if (wstatus < 0)
+		return (wstatus);
 	if (*cmds && !ft_strncmp((*cmds)->content, "|", 2))
 	{
 		if (pipe(writefd) == -1)
@@ -140,6 +142,7 @@ int	ft_pipe_command(t_list **cmds, t_list **env, int *writefd, int *readfd)
 		return (perror("close"), -1);
 	if (waitpid(cpid, &wstatus, 0) == -1)
 		return (perror((*cmds)->content), -1);
+	wstatus = ft_pipe_builtin(cmds, env, wstatus);
 	wstatus = ft_parent_do(cmds, writefd, readfd, wstatus);
 	if (wstatus < 0)
 		return (wstatus);
