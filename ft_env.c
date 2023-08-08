@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:11:01 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 03:55:08 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 18:32:18 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	ft_env(char **argv, t_list **env)
 	lst = *env;
 	while (lst)
 	{
-		if (ft_strncmp(lst->content, "?=", 2))
+		if (ft_strncmp(lst->content, "?=", 2)
+			&& ft_strncmp(lst->content, "|=", 2))
 			ft_printf("%s\n", lst->content);
 		lst = lst->next;
 	}
