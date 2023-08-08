@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 17:00:35 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 04:49:40 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,14 @@
 extern int	g_signum;
 
 int		ft_event_hook(void);
+
 void	ft_free_tab(char **tab);
-char	*ft_env_get(t_list **env, char *key);
-void	ft_env_put(t_list **env, char *key, char *value);
+
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
+
+char	*ft_env_gets(t_list **env, char *key);
+void	ft_env_puts(t_list **env, char *key, char *value);
+void	ft_env_puti(t_list **env, char *key, int value);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -68,13 +72,36 @@ uint8_t	ft_redirect_output(char *filename, int openflag, int *readfd);
 
 /* ************************************************************************** */
 /*                                                                            */
+/*                                  builtins                                  */
+/*                                                                            */
+/* ************************************************************************** */
+
+int		ft_echo(char **argv, t_list **env);
+int		ft_pwd(char **argv, t_list **env);
+int		ft_env(char **argv, t_list **env);
+int		ft_pass(char **argv, t_list **env);
+
+int		ft_cd(char *cmd, char **argv, t_list **env);
+int		ft_export(char *cmd, char **argv, t_list **env);
+int		ft_unset(char *cmd, char **argv, t_list **env);
+int		ft_exit(char *cmd, char **argv, t_list **env);
+
+/* ************************************************************************** */
+/*                                                                            */
 /*                                  commands                                  */
 /*                                                                            */
 /* ************************************************************************** */
 
 char	*ft_parse_redirection(char c, char *cmd, t_list **cmds);
+
+char	**ft_parse_arguments(char *cmd);
+
+int		ft_execute_builtin(char *cmd, t_list **env);
 int		ft_execute_command(char *cmd, t_list **env);
+
+int		ft_pipe_builtin(t_list **cmds, t_list **env, int wstatus);
 int		ft_pipe_command(t_list **cmds, t_list **env, int *writefd, int *readfd);
+
 int		ft_process_line(char *line, t_list **env);
 
 #endif
