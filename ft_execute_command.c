@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 02:00:23 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 18:20:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static char	*ft_realpath(t_list **env, char *filename, char *filename_path)
 	size_t	i;
 	char	*filepath;
 
-	if (!filename_path)
-		return (ft_strdup(filename));
+	if (filename[0] == '/' || !filename_path)
+		return (free(filename_path), ft_strdup(filename));
 	envpath = ft_split(ft_env_gets(env, "PATH"), ':');
 	if (!envpath)
 		return (free(filename_path), ft_strdup(filename));
@@ -69,8 +69,8 @@ int	ft_execute_command(char *cmd, t_list **env)
 
 	envp = ft_env_to_tab(env);
 	argv = ft_parse_arguments(cmd);
-	if (!argv)
-		return (free(envp), EXIT_FAILURE);
+	if (!argv || !(argv[0]))
+		return (free(envp), ft_free_tab(argv), EXIT_FAILURE);
 	path = ft_realpath(env, argv[0], ft_strjoin("/", argv[0]));
 	if (!path)
 		return (free(envp), ft_free_tab(argv), EXIT_FAILURE);
