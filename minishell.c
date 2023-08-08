@@ -6,40 +6,11 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 02:32:11 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 18:29:12 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	g_signum = 0;
-
-static void	ft_handle_signal(int signum)
-{
-	g_signum = signum;
-	if (signum == SIGINT)
-		rl_done = 1;
-}
-
-static void	ft_setup_sigaction(void)
-{
-	struct sigaction	act;
-	struct sigaction	no_act;
-
-	rl_event_hook = &ft_event_hook;
-	act.sa_handler = &ft_handle_signal;
-	act.sa_flags = 0;
-	if (sigemptyset(&(act.sa_mask)) == -1)
-		perror("act sigemptyset");
-	if (sigaction(SIGINT, &act, NULL) == -1)
-		perror("SIGINT sigaction");
-	no_act.sa_handler = SIG_IGN;
-	no_act.sa_flags = 0;
-	if (sigemptyset(&(no_act.sa_mask)) == -1)
-		perror("no_act sigemptyset");
-	if (sigaction(SIGQUIT, &no_act, NULL) == -1)
-		perror("SIGQUIT sigaction");
-}
 
 static t_list	*ft_init_env(char **ep)
 {
@@ -89,30 +60,50 @@ static char	*ft_get_prompt(t_list **env)
 	return (prompt);
 }
 
+static char	*ft_handle_line(t_list **env, int *code)
+{
+	char	*str;
+	char	*line;
+
+	if (isatty(STDIN_FILENO))
+	{
+		str = ft_get_prompt(env);
+		line = readline(str);
+		free(str);
+	}
+	else
+		line = get_next_line(STDIN_FILENO);
+	if (!g_signum && line && *line)
+	{
+		add_history(line);
+		*code = ft_process_line(line, env);
+		ft_env_puti(env, "?", *code);
+	}
+	if (g_signum == SIGTERM)
+		return (ft_env_puti(env, "?", (-1 * (*code)) + 512), free(line), NULL);
+	return (line);
+}
+
 int	main(int ac, char **av, char **ep)
 {
 	t_list	*env;
-	char	*str;
 	char	*line;
 	int		code;
 
-	((void) ac, (void) av, ft_setup_sigaction(), env = ft_init_env(ep));
+	((void) ac, (void) av);
+	ft_handle_signals();
+	env = ft_init_env(ep);
 	line = ft_strdup("");
 	code = 0;
 	while (line)
 	{
-		(free(line), str = ft_get_prompt(&env));
-		line = readline(str);
-		free(str);
-		if (!g_signum && line && *line)
-			(add_history(line), code = ft_process_line(line, &env), \
-				ft_env_puti(&env, "?", code));
-		if (g_signum == SIGTERM)
-			return (ft_lstclear(&env, &free), ft_printf("exit\n"), \
-				(-1 * code) + 256);
+		free(line);
+		line = ft_handle_line(&env, &code);
 		if (g_signum == SIGINT)
 			(ft_env_puts(&env, "?", "130"), g_signum = 0);
+		if (ft_env_gets(&env, "|"))
+			ft_lst_pop(&env, &free);
 	}
-	code = ft_atoi(ft_env_gets(&env, "?"));
+	code = ft_env_geti(&env, "?");
 	return (ft_lstclear(&env, &free), ft_printf("exit\n"), code);
 }
