@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:47:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 04:49:40 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/08 14:51:46 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_execute_builtin(char *cmd, t_list **env)
 		"echo", "cd", "pwd", "export", "unset", "env", "exit"
 	};
 	static int	(*ft_builtin[])(char **, t_list **) = {
-		ft_echo, ft_pass, ft_pwd, ft_pass, ft_pass, ft_env, ft_pass
+		ft_echo, ft_pass, ft_pwd, ft_pass, ft_pass, ft_env, ft_exit
 	};
 	char		**argv;
 	size_t		i;
@@ -32,7 +32,7 @@ int	ft_execute_builtin(char *cmd, t_list **env)
 		return (EXIT_FAILURE);
 	i = 0;
 	code = 127;
-	while (code == 127 && i < 8)
+	while (code == 127 && i < 7)
 	{
 		if (!ft_strncmp(builtin[i], argv[0], ft_strlen(builtin[i]) + 1))
 			code = ft_builtin[i](argv, env);
