@@ -1,0 +1,12 @@
+printf "Hello world!\n"
+ls -la
+pwd
+<< EOF cat -e
+1
+ 
+2
+
+
+3
+EOFF
+EOF
