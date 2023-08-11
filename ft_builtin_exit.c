@@ -1,42 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   ft_builtin_exit.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:38:20 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 15:33:28 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/12 01:14:36 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_exit(char **argv, t_list **env)
+int	ft_builtin_exit(char **argv, t_list **env)
 {
-	size_t	i;
+	int	i;
 
-	i = 1;
-	while (argv[i])
-		++i;
-	if (i > 2)
-		return (ft_dprintf(STDERR_FILENO, \
-			"exit: too many arguments\n"), EXIT_FAILURE);
-	g_signum = SIGTERM;
-	if (argv[1])
+	if (!(argv[1]))
+		g_signum = SIGTERM;
+	else
 	{
-		i = 0;
+		i = (argv[1][0] == '-');
 		while (argv[1][i])
 		{
 			if (!ft_isdigit(argv[1][i]))
-			{
-				ft_dprintf(STDERR_FILENO, \
-					"exit: %s: numeric argument required\n", argv[1]);
-				return (2);
-			}
+				return (ft_pstderr3("exit", \
+					argv[1], "numeric argument required"), 2);
 			++i;
 		}
-		return (ft_atoi(argv[1]));
+		if (argv[1] && argv[2])
+			return (ft_pstderr2("exit", "too many arguments"), EXIT_FAILURE);
+		g_signum = SIGTERM;
+		i = ft_atoi(argv[1]) % 256;
+		if (i < 0)
+			return (i + 256);
+		return (i);
 	}
 	return (ft_env_geti(env, "?"));
 }
