@@ -6,12 +6,17 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 23:10:30 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 23:15:53 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/12 01:02:10 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+	TODO : shift chars to the left when closed quotes have been removed
+	and add parameter to choose which char to 'save' and a parameter
+	to remove closes quotes or not
+*/
 static char	*ft_setup_command(char *cmd)
 {
 	size_t	i;
