@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:04:18 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 18:17:37 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/11 18:28:41 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ uint8_t	ft_redirect_input(char *filename, int *writefd)
 
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		return (perror(filename), 0);
+		return (ft_perror(filename), 0);
 	str = get_next_line(fd);
 	dlines = 0;
 	while (dlines < DLINES_MAX && str)
@@ -33,7 +33,7 @@ uint8_t	ft_redirect_input(char *filename, int *writefd)
 			++dlines;
 	}
 	if (close(fd) == -1)
-		return (perror(filename), free(str), 0);
+		return (ft_perror(filename), free(str), 0);
 	if (g_signum == SIGINT)
 		return (ft_printf("\n"), free(str), 0);
 	return (free(str), 1);
