@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*   ft_builtin_echo.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:55:04 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 02:39:19 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/09 18:30:22 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(char **argv, t_list **env)
+int	ft_builtin_echo(char **argv, t_list **env)
 {
 	uint8_t	trailing_newline;
 	size_t	i;
