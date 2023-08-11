@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/08/08 19:59:46 by abenamar         ###   ########.fr        #
+#    Updated: 2023/08/11 18:55:40 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,9 +30,21 @@ LDLIBS += -lreadline
 #                                                                              #
 # **************************************************************************** #
 
-SRCS := ft_free_tab.c
+SRCS := ft_perror.c
+SRCS += ft_perror2.c
+SRCS += ft_pstderr.c
+SRCS += ft_pstderr2.c
+SRCS += ft_pstderr3.c
+
+SRCS += ft_free_tab.c
 
 SRCS += ft_lst_pop.c
+
+# **************************************************************************** #
+#                                                                              #
+#                                 environment                                  #
+#                                                                              #
+# **************************************************************************** #
 
 SRCS += ft_env_gets.c
 SRCS += ft_env_geti.c
@@ -53,9 +65,13 @@ SRCS += ft_handle_signals.c
 #                                                                              #
 # **************************************************************************** #
 
+SRCS += ft_parse_redirection.c
+
 SRCS += ft_here_document.c
 SRCS += ft_redirect_input.c
 SRCS += ft_redirect_output.c
+
+SRCS += ft_is_redirection.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -63,14 +79,20 @@ SRCS += ft_redirect_output.c
 #                                                                              #
 # **************************************************************************** #
 
-SRCS += ft_echo.c
-SRCS += ft_pwd.c
-SRCS += ft_env.c
-SRCS += ft_exit.c
-SRCS += ft_pass.c
-SRCS += ft_cd.c
-SRCS += ft_export.c
-SRCS += ft_unset.c
+SRCS += ft_check_export_identifier.c
+
+SRCS += ft_builtin_echo.c
+SRCS += ft_builtin_pwd.c
+SRCS += ft_builtin_env.c
+SRCS += ft_builtin_exit.c
+
+SRCS += ft_builtin_skip.c
+
+SRCS += ft_builtin_cd.c
+SRCS += ft_builtin_export.c
+SRCS += ft_builtin_unset.c
+
+SRCS += ft_builtin_minishell.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -78,16 +100,16 @@ SRCS += ft_unset.c
 #                                                                              #
 # **************************************************************************** #
 
-SRCS += ft_parse_redirection.c
-
 SRCS += ft_parse_arguments.c
 
-SRCS += ft_handle_exit.c
 SRCS += ft_execute_builtin.c
 SRCS += ft_execute_command.c
 
-SRCS += ft_pipe_builtin.c
-SRCS += ft_pipe_command.c
+SRCS += ft_handle_input.c
+SRCS += ft_handle_exit.c
+SRCS += ft_handle_builtin.c
+SRCS += ft_handle_output.c
+SRCS += ft_handle_pipe.c
 
 SRCS += ft_process_line.c
 
