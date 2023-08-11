@@ -6,27 +6,40 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:05:46 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/07 16:14:31 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/11 18:27:25 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static uint8_t	ft_is_eof(char *str, char *limiter, size_t len)
+{
+	if (!ft_strncmp(str, limiter, len) && ((isatty(STDIN_FILENO) && !(str[len]))
+			|| (!isatty(STDIN_FILENO) && str[len] == '\n')))
+		return (1);
+	return (0);
+}
+
 uint8_t	ft_here_document(char *limiter, int *writefd)
 {
 	const char		*warn = "here-document delimited by end-of-file";
-	const size_t	len = ft_strlen(limiter) + 1;
+	const size_t	len = ft_strlen(limiter);
 	char			*str;
 
-	str = readline("> ");
-	while (str && ft_strncmp(str, limiter, len))
+	if (isatty(STDIN_FILENO))
+		str = readline("> ");
+	else
+		str = get_next_line(STDIN_FILENO);
+	while (str && !ft_is_eof(str, limiter, len))
 	{
 		if (g_signum == SIGINT)
 			return (0);
 		ft_putstr_fd(str, writefd[1]);
-		ft_putstr_fd("\n", writefd[1]);
 		free(str);
-		str = readline("> ");
+		if (isatty(STDIN_FILENO))
+			(ft_putstr_fd("\n", writefd[1]), str = readline("> "));
+		else
+			str = get_next_line(STDIN_FILENO);
 	}
 	if (!str)
 		ft_printf("warning: %s (wanted `%s')\n", warn, limiter);
