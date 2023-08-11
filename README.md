@@ -40,12 +40,12 @@ foreground pipeline.
 	- [x] ctrl-\ does nothing.
 - [ ] Your shell must implement the following builtins :
 	- [x] echo with option -n
-	- [ ] cd with only a relative or absolute path
+	- [x] cd with only a relative or absolute path
 	- [x] pwd with no options
 	- [ ] export with no options
 	- [x] unset with no options
 	- [x] env with no options or arguments
-	- [x] exit with no options
+	- [ ] exit with no options
 
 ## Bonus
 
