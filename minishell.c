@@ -6,29 +6,50 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 18:29:12 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/12 01:31:59 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static uint8_t	ft_read_script(char *filename)
+{
+	int	pipefd[2];
+
+	if (pipe(pipefd) == -1)
+		return (ft_perror("pipe"), 0);
+	if (dup2(pipefd[0], STDIN_FILENO) == -1)
+		return (ft_perror("dup2"), 0);
+	if (!ft_redirect_input(filename, pipefd))
+		return (0);
+	if (close(pipefd[1]))
+		return (ft_perror("close"), 0);
+	if (close(pipefd[0]))
+		return (ft_perror("close"), 0);
+	return (1);
+}
+
 static t_list	*ft_init_env(char **ep)
 {
-	t_list	*lst;
+	t_list	*env;
 	size_t	i;
 	char	*var;
 
-	lst = NULL;
+	env = NULL;
 	i = 0;
 	while (ep[i])
 	{
 		var = ft_strdup(ep[i]);
 		if (var)
-			ft_lstadd_front(&lst, ft_lstnew(var));
+			ft_lstadd_front(&env, ft_lstnew(var));
 		++i;
 	}
-	ft_env_puts(&lst, "?", "0");
-	return (lst);
+	ft_env_puts(&env, "?", "0");
+	ft_env_puts(&env, "OLDPWD", ft_env_gets(&env, "OLDPWD"));
+	ft_env_puti(&env, "!exit", ft_env_geti(&env, "SHLVL"));
+	if (!isatty(STDIN_FILENO))
+		ft_env_puti(&env, "!exit", ft_env_geti(&env, "!exit") + 1);
+	return (env);
 }
 
 static char	*ft_get_prompt(t_list **env)
@@ -42,45 +63,47 @@ static char	*ft_get_prompt(t_list **env)
 	len = 0;
 	if (home)
 		len = ft_strlen(home);
-	cwd = getcwd(NULL, 0);
+	cwd = ft_env_gets(env, "PWD");
 	if (!cwd)
-		str = ft_strdup("");
+		cwd = "";
+	if (len && !ft_strncmp(cwd, home, len))
+		str = ft_strjoin("~", cwd + len);
 	else
 		str = ft_strdup(cwd);
-	if (len && !ft_strncmp(cwd, home, len))
-		(free(str), str = ft_strjoin("~", cwd + len));
-	free(cwd);
 	cwd = ft_strjoin(str, " $ \033[00m");
 	free(str);
 	if (ft_atoi(ft_env_gets(env, "?")))
-		prompt = ft_strjoin(FAILURE PROMPT, cwd);
+		prompt = ft_strjoin(__FAILURE __PROMPT, cwd);
 	else
-		prompt = ft_strjoin(SUCCESS PROMPT, cwd);
+		prompt = ft_strjoin(__SUCCESS __PROMPT, cwd);
 	free(cwd);
 	return (prompt);
 }
 
 static char	*ft_handle_line(t_list **env, int *code)
 {
-	char	*str;
 	char	*line;
+	char	*str;
 
 	if (isatty(STDIN_FILENO))
 	{
-		str = ft_get_prompt(env);
-		line = readline(str);
-		free(str);
+		line = ft_get_prompt(env);
+		str = readline(line);
+		if (!str)
+			return (ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1), \
+				ft_printf("exit\n"), free(line), NULL);
 	}
 	else
-		line = get_next_line(STDIN_FILENO);
-	if (!g_signum && line && *line)
 	{
-		add_history(line);
-		*code = ft_process_line(line, env);
-		ft_env_puti(env, "?", *code);
+		line = get_next_line(STDIN_FILENO);
+		str = ft_strtrim(line, "\n");
 	}
+	(free(line), line = ft_strtrim(str, " "), free(str));
+	if (!g_signum && line && *line)
+		(add_history(line), \
+			*code = ft_process_line(&line, env), ft_env_puti(env, "?", *code));
 	if (g_signum == SIGTERM)
-		return (ft_env_puti(env, "?", (-1 * (*code)) + 512), free(line), NULL);
+		return (ft_printf("exit\n"), free(line), NULL);
 	return (line);
 }
 
@@ -90,20 +113,22 @@ int	main(int ac, char **av, char **ep)
 	char	*line;
 	int		code;
 
-	((void) ac, (void) av);
-	ft_handle_signals();
+	if (!ft_handle_signals())
+		return (EXIT_FAILURE);
+	if (ac > 1 && !ft_read_script(av[1]))
+		return (EXIT_FAILURE);
 	env = ft_init_env(ep);
 	line = ft_strdup("");
 	code = 0;
-	while (line)
+	while (line || ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit"))
 	{
 		free(line);
 		line = ft_handle_line(&env, &code);
 		if (g_signum == SIGINT)
 			(ft_env_puts(&env, "?", "130"), g_signum = 0);
-		if (ft_env_gets(&env, "|"))
+		if (ft_env_gets(&env, "!pipe"))
 			ft_lst_pop(&env, &free);
 	}
 	code = ft_env_geti(&env, "?");
-	return (ft_lstclear(&env, &free), ft_printf("exit\n"), code);
+	return (ft_lstclear(&env, &free), code);
 }
