@@ -20,8 +20,8 @@ the implications: this approach ensures that your signal handler will not access
 main data structures.
 - [x] Not interpret unclosed quotes or special characters which are not required by the
 subject such as \ (backslash) or ; (semicolon).
-- [ ] Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
-- [ ] Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
+- [x] Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
+- [x] Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
 - [ ] Implement redirections :
 	- [x] < should redirect input.
 	- [x] > should redirect output.
