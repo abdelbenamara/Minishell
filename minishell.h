@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/11 18:55:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/31 00:42:45 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int		ft_builtin_minishell(char **argv, t_list **env);
 /*                                                                            */
 /* ************************************************************************** */
 
-char	**ft_parse_arguments(char *cmd);
+char	**ft_parse_arguments(char *cmd, char c, uint8_t quoted);
 
 int		ft_execute_builtin(char *cmd, t_list **env);
 int		ft_execute_command(char *cmd, t_list **env);
