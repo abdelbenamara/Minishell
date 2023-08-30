@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:08:19 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/12 00:59:01 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/31 01:24:55 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	ft_handle_export(char **argv, t_list **env)
 {
 	int		code;
 	size_t	i;
+	char	*str;
 
 	code = EXIT_SUCCESS;
 	i = 1;
@@ -23,10 +24,13 @@ static int	ft_handle_export(char **argv, t_list **env)
 	{
 		if (ft_check_export_identifier(argv[i]))
 		{
-			if (ft_strchr(argv[i], '='))
-				ft_env_puts(env, argv[i], argv[i] + ft_strlen(argv[i]) + 1);
-			else
-				ft_env_puts(env, argv[i], "");
+			str = ft_strchr(argv[i], '=');
+			if (str)
+			{
+				*str = '\0';
+				str += 1;
+			}
+			ft_env_puts(env, argv[i], str);
 		}
 		else
 			code = EXIT_FAILURE;
@@ -35,6 +39,10 @@ static int	ft_handle_export(char **argv, t_list **env)
 	return (code);
 }
 
+/*
+	TODO : write a function to handle minishell when executed from program path
+	and not from command name (e.g. "./minishell", "../minishell" etc)
+*/
 static int	ft_handle_minishell(char **argv, t_list **env)
 {
 	if (!(argv[1]))
@@ -53,7 +61,7 @@ static int	ft_pipe_builtin(t_list **cmds, t_list **env, int fd, \
 	int		wstatus;
 	pid_t	cpid;
 
-	argv = ft_parse_arguments((*cmds)->content);
+	argv = ft_parse_arguments((*cmds)->content, ' ', 0);
 	if (!argv)
 		return (-1);
 	code = ft_builtin_command(argv, env);
@@ -88,7 +96,7 @@ int	ft_handle_builtin(t_list **cmds, t_list **env, int fd, int wstatus)
 
 	if (!(*cmds))
 		return (wstatus);
-	argv = ft_parse_arguments((*cmds)->content);
+	argv = ft_parse_arguments((*cmds)->content, ' ', 0);
 	if (!argv)
 		return (-1);
 	(ft_env_puti(env, "!wstatus", wstatus), i = 0);
