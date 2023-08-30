@@ -6,16 +6,12 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:47:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/12 00:57:59 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/31 01:24:38 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-	TODO : write a function to handle minishell when executed from program path
-	and not from command name (e.g. "./minishell", "../minishell" etc)
-*/
 int	ft_execute_builtin(char *cmd, t_list **env)
 {
 	static char	*builtin[] = {
@@ -30,7 +26,7 @@ int	ft_execute_builtin(char *cmd, t_list **env)
 
 	if (!cmd || ft_is_redirection(cmd))
 		return (EXIT_SUCCESS);
-	argv = ft_parse_arguments(cmd);
+	argv = ft_parse_arguments(cmd, ' ', 0);
 	if (!argv)
 		return (EXIT_FAILURE);
 	i = 0;
