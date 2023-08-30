@@ -10,3 +10,5 @@ pwd
 3
 EOFF
 EOF
+echo -n 'bye'
+echo " bye"
