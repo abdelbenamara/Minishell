@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 14:41:14 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/12 01:19:28 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/30 13:48:00 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,24 @@ static void	ft_env_put_pipe_counts(t_list **cmds, t_list **env)
 	ft_env_puti(env, "!pipe", count);
 }
 
-/*
-	TODO : check the arguments of the exit command as in ft_builtin_exit
-*/
+static uint8_t	ft_check_arguments(char **argv)
+{
+	size_t	i;
+
+	if (!(argv[1]))
+		return (1);
+	i = (argv[1][0] == '-');
+	while (argv[1][i])
+	{
+		if (!ft_isdigit(argv[1][i]))
+			return (1);
+		++i;
+	}
+	if (argv[1] && argv[2])
+		return (0);
+	return (1);
+}
+
 int	ft_handle_exit(t_list **cmds, t_list **env, int wstatus)
 {
 	char	**argv;
@@ -46,7 +61,9 @@ int	ft_handle_exit(t_list **cmds, t_list **env, int wstatus)
 		return (-1);
 	if (!ft_strncmp("exit", argv[0], 5))
 	{
-		if (ft_env_geti(env, "SHLVL") == ft_env_geti(env, "!exit"))
+		if (!ft_check_arguments(argv))
+			ft_printf("exit\n");
+		else if (ft_env_geti(env, "SHLVL") == ft_env_geti(env, "!exit"))
 			(ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1), \
 				g_signum = SIGTERM);
 		else
