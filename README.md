@@ -45,7 +45,7 @@ foreground pipeline.
 	- [ ] export with no options
 	- [x] unset with no options
 	- [x] env with no options or arguments
-	- [ ] exit with no options
+	- [x] exit with no options
 
 ## Bonus
 
