@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 14:41:14 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/30 13:48:00 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/31 00:43:22 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	ft_handle_exit(t_list **cmds, t_list **env, int wstatus)
 		ft_env_put_pipe_counts(cmds, env);
 	if (ft_env_geti(env, "!pipe"))
 		return (wstatus);
-	argv = ft_parse_arguments((*cmds)->content);
+	argv = ft_parse_arguments((*cmds)->content, ' ', 0);
 	if (!argv)
 		return (-1);
 	if (!ft_strncmp("exit", argv[0], 5))
