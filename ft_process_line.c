@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/11 11:46:08 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/08/31 00:42:51 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 	size_t	i;
 	t_list	*lst;
 
-	strs = ft_split(eline, '|');
+	strs = ft_parse_arguments(eline, '|', 1);
 	if (!strs)
 		return (free(eline), 0);
 	i = 0;
