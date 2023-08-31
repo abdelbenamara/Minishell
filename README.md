@@ -38,11 +38,11 @@ foreground pipeline.
 	- [x] ctrl-C displays a new prompt on a new line.
 	- [x] ctrl-D exits the shell.
 	- [x] ctrl-\ does nothing.
-- [ ] Your shell must implement the following builtins :
+- [x] Your shell must implement the following builtins :
 	- [x] echo with option -n
 	- [x] cd with only a relative or absolute path
 	- [x] pwd with no options
-	- [ ] export with no options
+	- [x] export with no options
 	- [x] unset with no options
 	- [x] env with no options or arguments
 	- [x] exit with no options
