@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 17:33:10 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 18:38:20 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	*ft_strjoin_and_free(char *s1, char *s2);
 void	ft_free_tab(char **tab);
 
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
+
+char	*ft_realpath(t_list **env, char *filename, char *filename_path);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -114,8 +116,6 @@ int		ft_builtin_cd(char **argv, t_list **env);
 int		ft_builtin_export(char **argv, t_list **env);
 int		ft_builtin_unset(char **argv, t_list **env);
 
-int		ft_builtin_minishell(char **argv, t_list **env);
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                  commands                                  */
@@ -132,6 +132,7 @@ int		ft_execute_command(char *cmd, t_list **env);
 int		ft_handle_input(t_list **cmds, int *writefd);
 int		ft_handle_exit(t_list **cmds, t_list **env, int wstatus);
 int		ft_handle_builtin(t_list **cmds, t_list **env, int fd, int wstatus);
+int		ft_handle_minishell(t_list **cmds, t_list **env, int wstatus);
 int		ft_handle_output(t_list **cmds, int *readfd, int fd, int wstatus);
 int		ft_handle_pipe(t_list **cmds, t_list **env, int *writefd, int *readfd);
 
