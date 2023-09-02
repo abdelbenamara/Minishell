@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 19:19:02 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 19:50:21 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ int	main(int ac, char **av, char **ep)
 	line = ft_strdup("");
 	code = 0;
 	while (g_signum != SIGTERM
-		|| ft_env_geti(&env, "SHLVL") > ft_env_geti(&env, "!exit"))
+		|| ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit"))
 	{
-		free(line);
+		(free(line), g_signum = 0);
 		line = ft_handle_line(&env, &code);
 		if (g_signum == SIGINT)
 			(ft_env_puts(&env, "?", "130"), g_signum = 0);
