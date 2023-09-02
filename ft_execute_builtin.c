@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:47:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/31 01:24:38 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 18:02:23 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int	ft_execute_builtin(char *cmd, t_list **env)
 {
 	static char	*builtin[] = {
-		"echo", "cd", "pwd", "export", "unset", "env", "exit", "minishell", NULL
+		"echo", "cd", "pwd", "export", "unset", "env", "exit", NULL
 	};
 	static int	(*ft_builtin[])(char **, t_list **) = {
 		ft_builtin_echo, ft_builtin_skip, ft_builtin_pwd, ft_builtin_export,
-		ft_builtin_skip, ft_builtin_env, ft_builtin_exit, ft_builtin_minishell
+		ft_builtin_skip, ft_builtin_env, ft_builtin_exit
 	};
 	char		**argv;
 	int			i;
