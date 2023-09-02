@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/31 00:42:45 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 17:33:10 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int		ft_perror2(char *s1, char *s2);
 int		ft_pstderr(char *str);
 int		ft_pstderr2(char *s1, char *s2);
 int		ft_pstderr3(char *s1, char *s2, char *s3);
+
+char	*ft_strjoin_and_free(char *s1, char *s2);
 
 void	ft_free_tab(char **tab);
 
@@ -120,6 +122,8 @@ int		ft_builtin_minishell(char **argv, t_list **env);
 /*                                                                            */
 /* ************************************************************************** */
 
+char	*ft_setup_command(char *cmd, char c, uint8_t quoted);
+char	*ft_clean_argument(char *str, char c);
 char	**ft_parse_arguments(char *cmd, char c, uint8_t quoted);
 
 int		ft_execute_builtin(char *cmd, t_list **env);
