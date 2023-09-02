@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/31 00:42:51 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 16:52:20 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,6 @@ static char	*ft_expand_variable(char *line, size_t *i, t_list **env)
 	return (free(key), NULL);
 }
 
-static char	*ft_strjoin_and_free(char *s1, char *s2)
-{
-	char	*str;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-		return (s2);
-	if (!s2)
-		return (s1);
-	str = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (str);
-}
-
 static char	*ft_expand_line(char *line, t_list **env)
 {
 	char	*str;
@@ -86,6 +70,22 @@ static char	*ft_expand_line(char *line, t_list **env)
 	return (str);
 }
 
+static t_list	*ft_reverse_rotate(t_list **lst)
+{
+	t_list	*tmp;
+
+	tmp = *lst;
+	if (!tmp)
+		return (NULL);
+	while (tmp->next && tmp->next->next)
+		tmp = tmp->next;
+	ft_lstadd_front(lst, tmp->next);
+	tmp->next = NULL;
+	if (ft_is_redirection((*lst)->content))
+		return (*lst);
+	return (ft_reverse_rotate(lst));
+}
+
 static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 {
 	char	**strs;
@@ -109,7 +109,7 @@ static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 			ft_lstadd_back(cmds, ft_lstnew(strs[i]));
 		else
 			free(strs[i]);
-		ft_lstadd_back(cmds, lst);
+		ft_lstadd_back(cmds, ft_reverse_rotate(&lst));
 		++i;
 	}
 	return (free(eline), free(strs), 1);
@@ -131,7 +131,7 @@ int	ft_process_line(char **line, t_list **env)
 	int		writefd[2];
 	int		readfd[2];
 
-	if (!(*line) || (*line)[0] == '|' || (*line)[ft_strlen(*line) - 1] == '|')
+	if ((*line)[0] == '|' || (*line)[ft_strlen(*line) - 1] == '|')
 		return (ft_printf("syntax error near unexpected token `|'\n"), 2);
 	cmds = NULL;
 	if (!ft_parse_commands(ft_expand_line(*line, env), &cmds))
@@ -144,7 +144,7 @@ int	ft_process_line(char **line, t_list **env)
 	wstatus = 0;
 	while (cmds && wstatus >= 0)
 		wstatus = ft_handle_pipe(&cmds, env, writefd, readfd);
-	*line = ft_strdup("");
+	*line = NULL;
 	if (wstatus < 0)
 		return (close(writefd[0]), close(writefd[1]), close(readfd[0]), \
 			close(readfd[1]), ft_lstclear(&cmds, &free), (-1 * wstatus));
