@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 18:38:20 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 20:48:19 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int		ft_perror2(char *s1, char *s2);
 int		ft_pstderr(char *str);
 int		ft_pstderr2(char *s1, char *s2);
 int		ft_pstderr3(char *s1, char *s2, char *s3);
+
+size_t	ft_is_quoted(char *str, char c);
 
 char	*ft_strjoin_and_free(char *s1, char *s2);
 
