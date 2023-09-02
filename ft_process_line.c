@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 16:52:20 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/03 01:03:03 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,31 +41,28 @@ static char	*ft_expand_variable(char *line, size_t *i, t_list **env)
 	return (free(key), NULL);
 }
 
-static char	*ft_expand_line(char *line, t_list **env)
+static char	*ft_expand_line(char *line, t_list **env, size_t dquotes)
 {
 	char	*str;
 	size_t	i;
-	size_t	j;
 
 	str = NULL;
 	i = 0;
 	while (line[i] && line[i] != '$')
 	{
-		if (line[i] == '\'')
-		{
-			j = 1;
-			while (line[i + j] && line[i + j] != '\'')
-				++j;
-			if (line[i + j] == '\'')
-				i += j;
-		}
+		if (line[i] == '\'' && !dquotes)
+			i += ft_is_quoted(line + i, '\'');
+		else if (line[i] == '"' && !dquotes)
+			dquotes = ft_is_quoted(line + i, '"');
+		else if (line[i] == '"' && dquotes)
+			dquotes = 0;
 		++i;
 	}
 	str = ft_strjoin_and_free(str, ft_substr(line, 0, i));
 	if (line[i] == '$')
 	{
 		str = ft_strjoin_and_free(str, ft_expand_variable(line, &i, env));
-		str = ft_strjoin_and_free(str, ft_expand_line(line + i, env));
+		str = ft_strjoin_and_free(str, ft_expand_line(line + i, env, dquotes));
 	}
 	return (str);
 }
@@ -115,15 +112,6 @@ static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
 	return (free(eline), free(strs), 1);
 }
 
-/*
-	t_list	*lst;
-
-	ft_printf("\033[01;35m[DEBUG] cmds : [ %s", cmds->content);
-	lst = cmds->next;
-	while (lst)
-		(ft_printf(", %s", lst->content), lst = lst->next);
-	ft_printf(" ]\033[00m\n");
-*/
 int	ft_process_line(char **line, t_list **env)
 {
 	int		wstatus;
@@ -134,7 +122,7 @@ int	ft_process_line(char **line, t_list **env)
 	if ((*line)[0] == '|' || (*line)[ft_strlen(*line) - 1] == '|')
 		return (ft_printf("syntax error near unexpected token `|'\n"), 2);
 	cmds = NULL;
-	if (!ft_parse_commands(ft_expand_line(*line, env), &cmds))
+	if (!ft_parse_commands(ft_expand_line(*line, env, 0), &cmds))
 		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
 	if (!cmds)
 		return (EXIT_SUCCESS);
