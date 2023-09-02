@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/02 17:33:38 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/02 18:39:46 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,8 @@ SRCS += ft_strjoin_and_free.c
 SRCS += ft_free_tab.c
 
 SRCS += ft_lst_pop.c
+
+SRCS += ft_realpath.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -94,8 +96,6 @@ SRCS += ft_builtin_cd.c
 SRCS += ft_builtin_export.c
 SRCS += ft_builtin_unset.c
 
-SRCS += ft_builtin_minishell.c
-
 # **************************************************************************** #
 #                                                                              #
 #                                   commands                                   #
@@ -112,6 +112,7 @@ SRCS += ft_execute_command.c
 SRCS += ft_handle_input.c
 SRCS += ft_handle_exit.c
 SRCS += ft_handle_builtin.c
+SRCS += ft_handle_minishell.c
 SRCS += ft_handle_output.c
 SRCS += ft_handle_pipe.c
 
