@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/08/11 18:55:40 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/02 17:33:38 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,8 @@ SRCS += ft_perror2.c
 SRCS += ft_pstderr.c
 SRCS += ft_pstderr2.c
 SRCS += ft_pstderr3.c
+
+SRCS += ft_strjoin_and_free.c
 
 SRCS += ft_free_tab.c
 
@@ -100,6 +102,8 @@ SRCS += ft_builtin_minishell.c
 #                                                                              #
 # **************************************************************************** #
 
+SRCS += ft_setup_command.c
+SRCS += ft_clean_argument.c
 SRCS += ft_parse_arguments.c
 
 SRCS += ft_execute_builtin.c
