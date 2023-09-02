@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/02 18:39:46 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/02 20:48:48 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,8 @@ SRCS += ft_perror2.c
 SRCS += ft_pstderr.c
 SRCS += ft_pstderr2.c
 SRCS += ft_pstderr3.c
+
+SRCS += ft_is_quoted.c
 
 SRCS += ft_strjoin_and_free.c
 
