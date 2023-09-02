@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:08:19 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/31 01:24:55 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 18:03:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,6 @@ static int	ft_handle_export(char **argv, t_list **env)
 		++i;
 	}
 	return (code);
-}
-
-/*
-	TODO : write a function to handle minishell when executed from program path
-	and not from command name (e.g. "./minishell", "../minishell" etc)
-*/
-static int	ft_handle_minishell(char **argv, t_list **env)
-{
-	if (!(argv[1]))
-	{
-		ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") + 1);
-		return (EXIT_SUCCESS);
-	}
-	return (WEXITSTATUS(ft_env_geti(env, "!wstatus")));
 }
 
 static int	ft_pipe_builtin(t_list **cmds, t_list **env, int fd, \
@@ -86,10 +72,10 @@ static int	ft_pipe_builtin(t_list **cmds, t_list **env, int fd, \
 int	ft_handle_builtin(t_list **cmds, t_list **env, int fd, int wstatus)
 {
 	static char	*builtin[] = {
-		"cd", "export", "unset", "minishell", NULL
+		"cd", "export", "unset", NULL
 	};
 	static int	(*ft_builtin[])(char **, t_list **) = {
-		ft_builtin_cd, ft_handle_export, ft_builtin_unset, ft_handle_minishell
+		ft_builtin_cd, ft_handle_export, ft_builtin_unset
 	};
 	char		**argv;
 	int			i;
