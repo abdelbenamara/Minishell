@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/01 16:14:07 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 18:39:19 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	ft_handle_pipe(t_list **cmds, t_list **env, int *writefd, int *readfd)
 	wstatus = ft_close_fds(writefd[0], readfd[1], wstatus);
 	wstatus = ft_handle_exit(cmds, env, wstatus);
 	wstatus = ft_handle_builtin(cmds, env, readfd[0], wstatus);
+	wstatus = ft_handle_minishell(cmds, env, wstatus);
 	wstatus = ft_redirect(cmds, writefd, readfd, wstatus);
 	if (*cmds && wstatus >= 0)
 		wstatus = ft_handle_pipe(cmds, env, writefd, readfd);
