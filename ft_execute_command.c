@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 18:43:13 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 19:46:26 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,8 @@ int	ft_execute_command(char *cmd, t_list **env)
 	if (!path)
 		return (free(envp), ft_free_tab(argv), EXIT_FAILURE);
 	code = EXIT_SUCCESS;
-	if ((ft_strncmp(path, "../", 3) && ft_strncmp(path, "./", 2)
-			&& ft_strncmp(path, "/", 1))
-		|| access(path, F_OK) == -1)
+	if (ft_strncmp(path, "../", 3) && ft_strncmp(path, "./", 2)
+		&& ft_strncmp(path, "/", 1))
 		(ft_pstderr2(path, "command not found"), code = 127);
 	else if (access(path, F_OK) == -1)
 		(ft_perror(path), code = 127);
