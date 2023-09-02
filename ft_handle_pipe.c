@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/12 01:07:11 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/01 16:14:07 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,11 @@ static int	ft_redirect(t_list **cmds, int *writefd, int *readfd, int wstatus)
 	int	fd;
 
 	if (!(*cmds))
+	{
+		if (close(readfd[0]) == -1)
+			return (ft_perror("close"), -1);
 		return (wstatus);
+	}
 	if (!ft_is_redirection((*cmds)->content))
 		ft_lst_pop(cmds, &free);
 	if (wstatus < 0)
