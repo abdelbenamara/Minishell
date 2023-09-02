@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/12 01:31:59 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/02 19:19:02 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,14 @@ static char	*ft_handle_line(t_list **env, int *code)
 		str = readline(line);
 		if (!str)
 			return (ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1), \
-				ft_printf("exit\n"), free(line), NULL);
+				ft_printf("exit\n"), g_signum = SIGTERM, free(line), NULL);
 	}
 	else
 	{
 		line = get_next_line(STDIN_FILENO);
 		str = ft_strtrim(line, "\n");
+		if (!str)
+			return (g_signum = SIGTERM, free(line), NULL);
 	}
 	(free(line), line = ft_strtrim(str, " "), free(str));
 	if (!g_signum && line && *line)
@@ -120,7 +122,8 @@ int	main(int ac, char **av, char **ep)
 	env = ft_init_env(ep);
 	line = ft_strdup("");
 	code = 0;
-	while (line || ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit"))
+	while (g_signum != SIGTERM
+		|| ft_env_geti(&env, "SHLVL") > ft_env_geti(&env, "!exit"))
 	{
 		free(line);
 		line = ft_handle_line(&env, &code);
