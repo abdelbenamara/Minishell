@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 19:50:21 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/04 13:34:14 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ static t_list	*ft_init_env(char **ep)
 	ft_env_puts(&env, "?", "0");
 	ft_env_puts(&env, "OLDPWD", ft_env_gets(&env, "OLDPWD"));
 	ft_env_puti(&env, "!exit", ft_env_geti(&env, "SHLVL"));
-	if (!isatty(STDIN_FILENO))
-		ft_env_puti(&env, "!exit", ft_env_geti(&env, "!exit") + 1);
 	return (env);
 }
 
@@ -63,21 +61,22 @@ static char	*ft_get_prompt(t_list **env)
 	len = 0;
 	if (home)
 		len = ft_strlen(home);
-	cwd = ft_env_gets(env, "PWD");
+	if (ft_env_gets(env, "PWD"))
+		cwd = ft_strdup(ft_env_gets(env, "PWD"));
+	else
+		cwd = getcwd(NULL, 0);
 	if (!cwd)
-		cwd = "";
+		return (NULL);
 	if (len && !ft_strncmp(cwd, home, len))
 		str = ft_strjoin("~", cwd + len);
 	else
 		str = ft_strdup(cwd);
-	cwd = ft_strjoin(str, " $ \033[00m");
-	free(str);
+	(free(cwd), cwd = ft_strjoin(str, " $ \033[00m"), free(str));
 	if (ft_atoi(ft_env_gets(env, "?")))
 		prompt = ft_strjoin(__FAILURE __PROMPT, cwd);
 	else
 		prompt = ft_strjoin(__SUCCESS __PROMPT, cwd);
-	free(cwd);
-	return (prompt);
+	return (free(cwd), prompt);
 }
 
 static char	*ft_handle_line(t_list **env, int *code)
@@ -102,10 +101,8 @@ static char	*ft_handle_line(t_list **env, int *code)
 	}
 	(free(line), line = ft_strtrim(str, " "), free(str));
 	if (!g_signum && line && *line)
-		(add_history(line), \
-			*code = ft_process_line(&line, env), ft_env_puti(env, "?", *code));
-	if (g_signum == SIGTERM)
-		return (ft_printf("exit\n"), free(line), NULL);
+		(add_history(line), *code = ft_process_line(&line, env), \
+			ft_env_puti(env, "?", *code));
 	return (line);
 }
 
@@ -120,10 +117,10 @@ int	main(int ac, char **av, char **ep)
 	if (ac > 1 && !ft_read_script(av[1]))
 		return (EXIT_FAILURE);
 	env = ft_init_env(ep);
-	line = ft_strdup("");
+	line = NULL;
 	code = 0;
-	while (g_signum != SIGTERM
-		|| ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit"))
+	while (g_signum != SIGTERM || (isatty(STDIN_FILENO)
+			&& ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit")))
 	{
 		(free(line), g_signum = 0);
 		line = ft_handle_line(&env, &code);
