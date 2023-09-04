@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 14:41:14 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/31 00:43:22 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/04 12:29:27 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,9 @@ int	ft_handle_exit(t_list **cmds, t_list **env, int wstatus)
 {
 	char	**argv;
 
-	if (!(*cmds) || (ft_env_gets(env, "!pipe") && ft_env_geti(env, "!pipe")))
-		return (wstatus);
 	if (!ft_env_gets(env, "!pipe"))
 		ft_env_put_pipe_counts(cmds, env);
-	if (ft_env_geti(env, "!pipe"))
+	if (!(*cmds) || ft_env_geti(env, "!pipe"))
 		return (wstatus);
 	argv = ft_parse_arguments((*cmds)->content, ' ', 0);
 	if (!argv)
@@ -63,12 +61,16 @@ int	ft_handle_exit(t_list **cmds, t_list **env, int wstatus)
 	{
 		if (!ft_check_arguments(argv))
 			ft_printf("exit\n");
-		else if (ft_env_geti(env, "SHLVL") == ft_env_geti(env, "!exit"))
-			(ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1), \
-				g_signum = SIGTERM);
 		else
-			(ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1), \
-				ft_printf("exit\n"));
+		{
+			if (ft_env_geti(env, "SHLVL") > ft_env_geti(env, "!exit"))
+				ft_printf("exit\n");
+			else if (isatty(STDIN_FILENO))
+				(ft_printf("exit\n"), g_signum = SIGTERM);
+			else
+				g_signum = SIGTERM;
+			ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1);
+		}
 	}
 	return (ft_free_tab(argv), wstatus);
 }
