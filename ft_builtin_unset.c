@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 04:20:23 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/11 10:32:32 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/04 17:15:04 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	ft_builtin_unset(char **argv, t_list **env)
 		var = ft_env_gets(env, argv[i]);
 		if (var)
 			ft_lst_pop(env, &free);
+		if (!ft_strncmp(argv[i], "SHLVL", 6))
+			ft_env_puts(env, "SHLVL", "0");
 		++i;
 	}
 	return (EXIT_SUCCESS);
