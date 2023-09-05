@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 14:41:14 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/04 12:29:27 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:51:15 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	ft_handle_exit(t_list **cmds, t_list **env, int wstatus)
 	argv = ft_parse_arguments((*cmds)->content, ' ', 0);
 	if (!argv)
 		return (-1);
-	if (!ft_strncmp("exit", argv[0], 5))
+	if (argv[0] && !ft_strncmp("exit", argv[0], 5))
 	{
 		if (!ft_check_arguments(argv))
 			ft_printf("exit\n");
