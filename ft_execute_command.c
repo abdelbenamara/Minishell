@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 23:07:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 19:46:26 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 01:00:16 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	ft_execute_command(char *cmd, t_list **env)
 
 	envp = ft_env_to_tab(env);
 	argv = ft_parse_arguments(cmd, ' ', 0);
-	if (!argv || !(argv[0]))
+	if (!argv)
 		return (free(envp), ft_free_tab(argv), EXIT_FAILURE);
 	path = ft_realpath(env, argv[0], ft_strjoin("/", argv[0]));
 	if (!path)
