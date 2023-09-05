@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/03 01:03:03 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 13:22:31 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,8 @@ int	ft_process_line(char **line, t_list **env)
 
 	if ((*line)[0] == '|' || (*line)[ft_strlen(*line) - 1] == '|')
 		return (ft_printf("syntax error near unexpected token `|'\n"), 2);
+	if (ft_is_redirection((*line) + ft_strlen(*line) - 1))
+		return (ft_printf("syntax error near unexpected token `newline'\n"), 2);
 	cmds = NULL;
 	if (!ft_parse_commands(ft_expand_line(*line, env, 0), &cmds))
 		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
