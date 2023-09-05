@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:05:46 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/11 18:27:25 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 21:35:06 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ uint8_t	ft_here_document(char *limiter, int *writefd)
 			str = get_next_line(STDIN_FILENO);
 	}
 	if (!str)
-		ft_printf("warning: %s (wanted `%s')\n", warn, limiter);
+		ft_printf("minishell: warning: %s (wanted `%s')\n", warn, limiter);
 	free(str);
 	return (1);
 }
