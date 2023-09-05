@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/04 13:34:14 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 22:01:30 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static char	*ft_get_prompt(t_list **env)
 	return (free(cwd), prompt);
 }
 
-static char	*ft_handle_line(t_list **env, int *code)
+static char	*ft_handle_line(t_list **env)
 {
 	char	*line;
 	char	*str;
@@ -99,10 +99,11 @@ static char	*ft_handle_line(t_list **env, int *code)
 		if (!str)
 			return (g_signum = SIGTERM, free(line), NULL);
 	}
+	if (*str)
+		add_history(str);
 	(free(line), line = ft_strtrim(str, " "), free(str));
 	if (!g_signum && line && *line)
-		(add_history(line), *code = ft_process_line(&line, env), \
-			ft_env_puti(env, "?", *code));
+		ft_env_puti(env, "?", ft_process_line(&line, env));
 	return (line);
 }
 
@@ -118,17 +119,16 @@ int	main(int ac, char **av, char **ep)
 		return (EXIT_FAILURE);
 	env = ft_init_env(ep);
 	line = NULL;
-	code = 0;
 	while (g_signum != SIGTERM || (isatty(STDIN_FILENO)
 			&& ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit")))
 	{
 		(free(line), g_signum = 0);
-		line = ft_handle_line(&env, &code);
+		line = ft_handle_line(&env);
 		if (g_signum == SIGINT)
 			(ft_env_puts(&env, "?", "130"), g_signum = 0);
 		if (ft_env_gets(&env, "!pipe"))
 			ft_lst_pop(&env, &free);
 	}
 	code = ft_env_geti(&env, "?");
-	return (ft_lstclear(&env, &free), code);
+	return (ft_lstclear(&env, &free), rl_clear_history(), code);
 }
