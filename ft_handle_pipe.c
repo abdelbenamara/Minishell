@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 18:39:19 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:25:44 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static void	ft_child(t_list **cmds, t_list **env, int *writefd, int *readfd)
 	int			code;
 	char		*cmd;
 
+	rl_clear_history();
 	if (dup2(writefd[0], STDIN_FILENO) == -1)
 		(ft_perror("dup2"), f(cmds, &free), f(env, &free), exit(EXIT_FAILURE));
 	if (dup2(readfd[1], STDOUT_FILENO) == -1)
@@ -69,6 +70,8 @@ static int	ft_redirect(t_list **cmds, int *writefd, int *readfd, int wstatus)
 	wstatus = ft_handle_output(cmds, readfd, fd, wstatus);
 	if (close(readfd[0]) == -1)
 		return (ft_perror("close"), -1);
+	if (*cmds && !ft_strncmp((*cmds)->content, "|", 2) && pipe(writefd) == -1)
+		return (ft_perror("pipe"), -1);
 	return (wstatus);
 }
 
