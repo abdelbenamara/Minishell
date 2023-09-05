@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/02 20:48:48 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/05 18:09:34 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -103,6 +103,8 @@ SRCS += ft_builtin_unset.c
 #                                   commands                                   #
 #                                                                              #
 # **************************************************************************** #
+
+SRCS += ft_parse_commands.c
 
 SRCS += ft_setup_command.c
 SRCS += ft_clean_argument.c
