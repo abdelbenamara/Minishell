@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/05 13:22:31 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 19:10:27 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ static char	*ft_expand_line(char *line, t_list **env, size_t dquotes)
 	while (line[i] && line[i] != '$')
 	{
 		if (line[i] == '\'' && !dquotes)
-			i += ft_is_quoted(line + i, '\'');
+			i += ft_is_quoted(line + i);
 		else if (line[i] == '"' && !dquotes)
-			dquotes = ft_is_quoted(line + i, '"');
+			dquotes = ft_is_quoted(line + i);
 		else if (line[i] == '"' && dquotes)
 			dquotes = 0;
 		++i;
@@ -67,49 +67,47 @@ static char	*ft_expand_line(char *line, t_list **env, size_t dquotes)
 	return (str);
 }
 
-static t_list	*ft_reverse_rotate(t_list **lst)
+static uint8_t	ft_check_redirection(char *str)
 {
-	t_list	*tmp;
+	size_t	i;
 
-	tmp = *lst;
-	if (!tmp)
-		return (NULL);
-	while (tmp->next && tmp->next->next)
-		tmp = tmp->next;
-	ft_lstadd_front(lst, tmp->next);
-	tmp->next = NULL;
-	if (ft_is_redirection((*lst)->content))
-		return (*lst);
-	return (ft_reverse_rotate(lst));
+	i = 1;
+	if (str[0] != '|' && str[i] == str[0])
+		++i;
+	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
+		++i;
+	if (str[i] == '|')
+		return (ft_printf("syntax error near unexpected token `|'\n"), 0);
+	if (str[0] != '|')
+	{
+		if (str[i] == '<')
+			return (ft_printf("syntax error near unexpected token `<'\n"), 0);
+		if (str[i] == '>')
+			return (ft_printf("syntax error near unexpected token `>'\n"), 0);
+	}
+	return (1);
 }
 
-static uint8_t	ft_parse_commands(char *eline, t_list **cmds)
+static uint8_t	ft_check_syntax(char *str)
 {
-	char	**strs;
 	size_t	i;
-	t_list	*lst;
 
-	strs = ft_parse_arguments(eline, '|', 1);
-	if (!strs)
-		return (free(eline), 0);
+	if (str[0] == '|')
+		return (ft_printf("syntax error near unexpected token `|'\n"), 0);
 	i = 0;
-	while (strs[i])
+	while (str[i])
 	{
-		if (i > 0)
-			ft_lstadd_back(cmds, ft_lstnew(ft_strdup("|")));
-		strs[i] = ft_parse_redirection('<', strs[i], cmds);
-		lst = NULL;
-		strs[i] = ft_parse_redirection('>', strs[i], &lst);
-		if (!(strs[i]))
-			return (free(eline), ft_free_tab(strs + i + 1), 0);
-		if (*(strs[i]))
-			ft_lstadd_back(cmds, ft_lstnew(strs[i]));
-		else
-			free(strs[i]);
-		ft_lstadd_back(cmds, ft_reverse_rotate(&lst));
+		if (str[i] == '\'' || str[i] == '"')
+			i += ft_is_quoted(str + i);
+		else if ((str[i] == '|' || str[i] == '<' || str[i] == '>')
+			&& !ft_check_redirection(str + i))
+			return (0);
 		++i;
 	}
-	return (free(eline), free(strs), 1);
+	--i;
+	if (str[i] == '|' || str[i] == '<' || str[i] == '>')
+		return (ft_printf("syntax error near unexpected token `newline'\n"), 0);
+	return (1);
 }
 
 int	ft_process_line(char **line, t_list **env)
@@ -119,10 +117,8 @@ int	ft_process_line(char **line, t_list **env)
 	int		writefd[2];
 	int		readfd[2];
 
-	if ((*line)[0] == '|' || (*line)[ft_strlen(*line) - 1] == '|')
-		return (ft_printf("syntax error near unexpected token `|'\n"), 2);
-	if (ft_is_redirection((*line) + ft_strlen(*line) - 1))
-		return (ft_printf("syntax error near unexpected token `newline'\n"), 2);
+	if (!ft_check_syntax(*line))
+		return (2);
 	cmds = NULL;
 	if (!ft_parse_commands(ft_expand_line(*line, env, 0), &cmds))
 		return (ft_lstclear(&cmds, &free), EXIT_FAILURE);
