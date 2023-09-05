@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:47:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 18:02:23 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:52:53 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_execute_builtin(char *cmd, t_list **env)
 	if (!argv)
 		return (EXIT_FAILURE);
 	i = 0;
-	while (builtin[i])
+	while (argv[0] && builtin[i])
 	{
 		if (!ft_strncmp(builtin[i], argv[0], ft_strlen(builtin[i]) + 1))
 			return (i = ft_builtin[i](argv, env), ft_free_tab(argv), i);
