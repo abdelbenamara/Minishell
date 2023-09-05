@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 17:19:43 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/05 20:59:29 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:43:25 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static size_t	ft_extract_characters(char *str, char c, uint8_t quoted)
 		str[j] = str[j + 2];
 		++j;
 	}
+	str[j] = '\0';
 	return (i);
 }
 
