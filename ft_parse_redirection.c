@@ -6,16 +6,16 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 20:01:24 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/03 10:42:28 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 21:09:14 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	ft_add_redirection(char *cmd, t_list **cmds)
+static size_t	ft_add_redirection(char c, char *cmd, t_list **cmds)
 {
 	size_t	i;
-	char	c;
+	char	q;
 	size_t	j;
 
 	i = 0;
@@ -24,21 +24,20 @@ static size_t	ft_add_redirection(char *cmd, t_list **cmds)
 	ft_lstadd_back(cmds, ft_lstnew(ft_substr(cmd, 0, i)));
 	while (cmd[i] && cmd[i] == ' ')
 		++i;
-	c = cmd[i];
-	if (!c)
+	q = cmd[i];
+	if (!q)
 		return (i);
 	j = 1;
-	if (c == '\'' || c == '"')
-		while (cmd[i + j] && cmd[i + j] != c)
-			++j;
+	if ((q == '\'' || q == '"') && ft_is_quoted(cmd + i))
+		j = ft_is_quoted(cmd + i);
 	else
-		while (cmd[i + j] && cmd[i + j] != ' ')
+		while (cmd[i + j] && cmd[i + j] != ' '
+			&& cmd[i + j] != '<' && cmd[i + j] != '>')
 			++j;
-	if ((c == '\'' || c == '"') && c == cmd[i + j])
-		(ft_lstadd_back(cmds, ft_lstnew(ft_substr(cmd, i + 1, j - 1))), ++j);
-	else
-		ft_lstadd_back(cmds, ft_lstnew(ft_substr(cmd, i, j)));
-	return (i + j);
+	if ((q == '\'' || q == '"') && cmd[i + j] == q)
+		return (ft_lstadd_back(cmds, ft_lstnew(\
+			ft_clean_argument(ft_substr(cmd, i + 1, j - 1), c))), i + j + 1);
+	return (ft_lstadd_back(cmds, ft_lstnew(ft_substr(cmd, i, j))), i + j);
 }
 
 char	*ft_parse_redirection(char c, char *cmd, t_list **cmds)
@@ -58,7 +57,7 @@ char	*ft_parse_redirection(char c, char *cmd, t_list **cmds)
 		i = 0;
 		while (cmd[i] && cmd[i] != str[0])
 			++i;
-		j = ft_add_redirection(str, cmds);
+		j = ft_add_redirection(c, str, cmds);
 		tmp = ft_substr(cmd, 0, i);
 		str = ft_substr(cmd, i + j, ft_strlen(cmd + i + j));
 		(free(cmd), cmd = ft_strjoin(tmp, str), free(str), free(tmp));
