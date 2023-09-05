@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 17:52:33 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/01 18:44:59 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 14:36:23 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_handle_output(t_list **cmds, int *readfd, int fd, int wstatus)
 		return (wstatus);
 	ft_lst_pop(cmds, &free);
 	if (!(*cmds) || !ft_strncmp((*cmds)->content, "|", 2))
-		return (ft_pstderr("syntax error near unexpected token `newline'"), -2);
+		return (ft_pstderr("syntax error near unexpected token `|'"), -2);
 	if (!ft_redirect_output((*cmds)->content, openflag, readfd))
 		return (ft_lst_pop(cmds, &free), -1);
 	return (ft_lst_pop(cmds, &free), \
