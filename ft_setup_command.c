@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 17:19:43 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 17:20:20 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/05 20:59:29 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ char	*ft_setup_command(char *cmd, char c, uint8_t quoted)
 {
 	char	*str;
 	size_t	i;
-	size_t	j;
 
 	str = ft_strdup(cmd);
 	if (!str)
@@ -64,16 +63,10 @@ char	*ft_setup_command(char *cmd, char c, uint8_t quoted)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'' || str[i] == '"')
-		{
-			j = i + 1;
-			while (str[j] && str[j] != str[i])
-				++j;
-			if (str[i] == str[j])
-				i += ft_extract_characters(str + i, c, quoted);
-		}
 		if (str[i] == '\t')
 			str[i] = ' ';
+		else if ((str[i] == '\'' || str[i] == '"') && ft_is_quoted(str + i))
+			i += ft_extract_characters(str + i, c, quoted);
 		++i;
 	}
 	return (str);
