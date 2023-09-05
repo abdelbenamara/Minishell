@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:08:19 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/02 18:03:35 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 00:52:32 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	ft_handle_builtin(t_list **cmds, t_list **env, int fd, int wstatus)
 	if (!argv)
 		return (-1);
 	(ft_env_puti(env, "!wstatus", wstatus), i = 0);
-	while (builtin[i])
+	while (argv[0] && builtin[i])
 	{
 		if (!ft_strncmp(builtin[i], argv[0], ft_strlen(builtin[i]) + 1))
 			return (ft_free_tab(argv), \
