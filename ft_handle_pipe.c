@@ -6,16 +6,14 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/06 16:39:03 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 17:54:50 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_handle_child_status(pid_t cpid, t_list **cmds)
+static int	ft_handle_child_status(pid_t cpid, t_list **cmds, int wstatus)
 {
-	int		wstatus;
-
 	if (waitpid(cpid, &wstatus, WUNTRACED) == -1)
 		(ft_lstclear(cmds, &free), \
 			ft_lstadd_front(cmds, ft_lstnew(ft_strdup(""))));
@@ -108,7 +106,7 @@ int	ft_handle_pipe(t_list **cmds, t_list **env, int *writefd, int *readfd)
 		return (ft_perror("fork"), -1);
 	if (!cpid)
 		return (ft_child(cmds, env, writefd, readfd), EXIT_SUCCESS);
-	wstatus = ft_handle_child_status(cpid, cmds);
+	wstatus = ft_handle_child_status(cpid, cmds, wstatus);
 	wstatus = ft_close_fds(writefd[0], readfd[1], wstatus);
 	wstatus = ft_handle_exit(cmds, env, wstatus);
 	wstatus = ft_handle_builtin(cmds, env, readfd[0], wstatus);
