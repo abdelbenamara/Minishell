@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+while true
+do
+	pstree -p $1
+	sleep 1
+done
