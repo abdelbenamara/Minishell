@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:11:43 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/10 17:50:32 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 16:29:28 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	ft_handle_sigint(int signum)
 {
 	g_signum = signum;
 	if (signum == SIGINT)
-		rl_done = 1;
+		(waitpid(-1, NULL, WUNTRACED), rl_done = 1);
 }
 
 uint8_t	ft_handle_signals(void)
