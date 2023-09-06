@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/05 18:33:25 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 11:30:40 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	ft_env_puti(t_list **env, char *key, int value);
 extern int	g_signum;
 
 uint8_t	ft_handle_signals(void);
+uint8_t	ft_handle_child_signals(void);
 
 /* ************************************************************************** */
 /*                                                                            */
