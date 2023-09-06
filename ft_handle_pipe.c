@@ -6,14 +6,28 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/05 19:25:44 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/06 16:39:03 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	ft_handle_child_status(pid_t cpid, t_list **cmds)
+{
+	int		wstatus;
+
+	if (waitpid(cpid, &wstatus, WUNTRACED) == -1)
+		(ft_lstclear(cmds, &free), \
+			ft_lstadd_front(cmds, ft_lstnew(ft_strdup(""))));
+	if (WIFSIGNALED(wstatus))
+		g_signum = WTERMSIG(wstatus);
+	return (wstatus);
+}
+
 static int	ft_close_fds(int writefd0, int readfd1, int wstatus)
 {
+	if (wstatus < 0)
+		return (wstatus);
 	if (close(writefd0) == -1)
 		return (ft_perror("close"), -1);
 	if (close(readfd1) == -1)
@@ -28,6 +42,8 @@ static void	ft_child(t_list **cmds, t_list **env, int *writefd, int *readfd)
 	char		*cmd;
 
 	rl_clear_history();
+	if (!ft_handle_child_signals())
+		(f(cmds, &free), f(env, &free), exit(EXIT_FAILURE));
 	if (dup2(writefd[0], STDIN_FILENO) == -1)
 		(ft_perror("dup2"), f(cmds, &free), f(env, &free), exit(EXIT_FAILURE));
 	if (dup2(readfd[1], STDOUT_FILENO) == -1)
@@ -50,6 +66,8 @@ static int	ft_redirect(t_list **cmds, int *writefd, int *readfd, int wstatus)
 {
 	int	fd;
 
+	if (wstatus < 0)
+		return (wstatus);
 	if (!(*cmds))
 	{
 		if (close(readfd[0]) == -1)
@@ -58,8 +76,6 @@ static int	ft_redirect(t_list **cmds, int *writefd, int *readfd, int wstatus)
 	}
 	if (!ft_is_redirection((*cmds)->content))
 		ft_lst_pop(cmds, &free);
-	if (wstatus < 0)
-		return (wstatus);
 	fd = STDOUT_FILENO;
 	if (*cmds && !ft_strncmp((*cmds)->content, "|", 2))
 	{
@@ -92,8 +108,7 @@ int	ft_handle_pipe(t_list **cmds, t_list **env, int *writefd, int *readfd)
 		return (ft_perror("fork"), -1);
 	if (!cpid)
 		return (ft_child(cmds, env, writefd, readfd), EXIT_SUCCESS);
-	if (waitpid(cpid, &wstatus, 0) == -1)
-		return (ft_perror((*cmds)->content), -1);
+	wstatus = ft_handle_child_status(cpid, cmds);
 	wstatus = ft_close_fds(writefd[0], readfd[1], wstatus);
 	wstatus = ft_handle_exit(cmds, env, wstatus);
 	wstatus = ft_handle_builtin(cmds, env, readfd[0], wstatus);
