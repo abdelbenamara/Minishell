@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/05 19:10:27 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/08 00:06:51 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,5 +134,7 @@ int	ft_process_line(char **line, t_list **env)
 	if (wstatus < 0)
 		return (close(writefd[0]), close(writefd[1]), close(readfd[0]), \
 			close(readfd[1]), ft_lstclear(&cmds, &free), (-1 * wstatus));
+	if (WIFSIGNALED(wstatus))
+		return (g_signum = WTERMSIG(wstatus), 128 + g_signum);
 	return (WEXITSTATUS(wstatus));
 }
