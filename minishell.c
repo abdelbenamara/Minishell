@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/06 12:21:50 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/07 23:59:17 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,11 @@ int	main(int ac, char **av, char **ep)
 	while (g_signum != SIGTERM || (isatty(STDIN_FILENO)
 			&& ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit")))
 	{
-		(free(line), g_signum = 0);
+		free(line);
+		g_signum = 0;
 		line = ft_handle_line(&env);
 		if (g_signum == SIGINT)
 			ft_env_puts(&env, "?", "130");
-		if (g_signum == SIGQUIT)
-			ft_env_puts(&env, "?", "131");
 		if (ft_env_gets(&env, "!pipe"))
 			ft_lst_pop(&env, &free);
 	}
