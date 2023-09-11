@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 13:05:51 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 19:53:58 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ char	*ft_expand(char *cmd, t_list **env, uint8_t dquoted, uint8_t hdoc);
 /* ************************************************************************** */
 
 extern int	g_signum;
-
-uint8_t	ft_child_signals(void);
 
 uint8_t	ft_signals(void);
 
