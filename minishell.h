@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 09:28:39 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:05:51 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	ft_child_execute(t_list **prcs, t_list **tkns, t_list **env);
 int		ft_builtin(char *cmd, t_list **env, uint8_t fake);
 int		ft_pipeline(t_list **tkns, t_list **env);
 
-t_list	**ft_line_to_tokens(char *line, t_list **tkns);
+t_list	**ft_line_parse(char *line, t_list **tkns);
 int		ft_line_process(char **line, t_list **env);
 
 #endif
