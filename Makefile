@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/11 09:28:49 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/11 13:05:44 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -120,7 +120,7 @@ SRCS += ft_child_execute.c
 SRCS += ft_builtin.c
 SRCS += ft_pipeline.c
 
-SRCS += ft_line_to_tokens.c
+SRCS += ft_line_parse.c
 SRCS += ft_line_process.c
 
 SRCS += minishell.c
