@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:23:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 00:47:14 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:51:00 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	ft_child_execute(t_list **prcs, t_list **tkns, t_list **env)
 	int	code;
 
 	if (!ft_redirect(tkns, env, 0))
+		(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
+	if (!ft_child_signals())
 		(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
 	if (!(*tkns))
 		(ft_child_exit(prcs, tkns, env), exit(EXIT_SUCCESS));
