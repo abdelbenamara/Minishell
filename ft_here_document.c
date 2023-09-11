@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:05:46 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 09:59:29 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:41:52 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static void	ft_write_line(uint8_t expand, char *str, t_list **env, int fd)
 
 static uint8_t	ft_read_lines(uint8_t expand, t_list **env, char *eof, int fd)
 {
-	const char		*warn = "here-document delimited by end-of-file";
 	const size_t	len = ft_strlen(eof);
 	char			*str;
 
@@ -50,7 +49,8 @@ static uint8_t	ft_read_lines(uint8_t expand, t_list **env, char *eof, int fd)
 			str = get_next_line(STDIN_FILENO);
 	}
 	if (!str)
-		ft_printf("minishell: warning: %s (wanted `%s')\n", warn, eof);
+		ft_printf("minishell: warning: here-document at line %s delimited by \
+end-of-file (wanted `%s')\n", ft_env_gets(env, "!line"), eof);
 	free(str);
 	return (free(eof), 1);
 }
