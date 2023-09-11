@@ -6,22 +6,22 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 17:58:39 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 13:05:20 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:23:58 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static size_t	ft_extract_redirection(char c, char *str, t_list **tkns)
+static size_t	ft_extract_redirection(char *str, char c, t_list **tkns)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
-	while (str[i] && str[i] == str[0] && i < 2)
+	while (str[i] == c)
 		++i;
 	ft_lstadd_back(tkns, ft_lstnew(ft_substr(str, 0, i)));
-	while (str[i] && str[i] == ' ')
+	while (str[i] == ' ')
 		++i;
 	j = ft_is_quoted(str + i);
 	if (!j)
@@ -32,17 +32,16 @@ static size_t	ft_extract_redirection(char c, char *str, t_list **tkns)
 		ft_str_replace(ft_substr(str, i, j), '\n', c))), i + j);
 }
 
-static char	*ft_add_redirection(char *str, char *op, char *cmd, t_list **tkns)
+static char	*ft_add_redirection(char *cmd, char *str, char c, t_list **tkns)
 {
 	size_t	i;
 	size_t	j;
 	char	*tmp;
 
 	i = 0;
-	j = ft_strlen(str) + 1;
-	while (ft_strncmp(str, cmd + i, j))
+	while (cmd[i] != c)
 		++i;
-	j = ft_extract_redirection(op[0], str, tkns);
+	j = ft_extract_redirection(str, c, tkns);
 	tmp = ft_substr(cmd, 0, i);
 	str = ft_substr(cmd, i + j, ft_strlen(cmd + i + j));
 	free(cmd);
@@ -52,27 +51,27 @@ static char	*ft_add_redirection(char *str, char *op, char *cmd, t_list **tkns)
 	return (cmd);
 }
 
-static char	*ft_search_redirection(char *op, char *cmd, t_list **tkns)
+static char	*ft_search_redirection(char *cmd, char c, t_list **tkns)
 {
 	char	*str;
 	char	*tmp;
 
 	if (!cmd)
 		return (NULL);
-	tmp = ft_command_setup(cmd, op[0], 1);
+	tmp = ft_command_setup(cmd, c, 1);
 	(free(cmd), cmd = tmp);
 	if (!cmd)
 		return (NULL);
-	str = ft_strnstr(cmd, op, ft_strlen(cmd));
+	str = ft_strchr(cmd, c);
 	while (str)
 	{
-		cmd = ft_add_redirection(str, op, cmd, tkns);
+		cmd = ft_add_redirection(cmd, str, c, tkns);
 		if (!cmd)
 			return (NULL);
-		str = ft_strnstr(cmd, op, ft_strlen(cmd));
+		str = ft_strchr(cmd, c);
 	}
 	tmp = ft_strtrim(cmd, " ");
-	return (free(cmd), ft_str_replace(tmp, '\n', op[0]));
+	return (free(cmd), ft_str_replace(tmp, '\n', c));
 }
 
 t_list	**ft_line_parse(char *line, t_list **tkns)
@@ -88,9 +87,8 @@ t_list	**ft_line_parse(char *line, t_list **tkns)
 	{
 		if (i > 0)
 			ft_lstadd_back(tkns, ft_lstnew(ft_strdup("|")));
-		strs[i] = ft_search_redirection("<<", strs[i], tkns);
-		strs[i] = ft_search_redirection("<", strs[i], tkns);
-		strs[i] = ft_search_redirection(">", strs[i], tkns);
+		strs[i] = ft_search_redirection(strs[i], '<', tkns);
+		strs[i] = ft_search_redirection(strs[i], '>', tkns);
 		if (!(strs[i]))
 			return (ft_tab_free(strs + i + 1), NULL);
 		if (*(strs[i]))
