@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 19:53:58 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 22:52:40 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@
 typedef struct s_proc
 {
 	pid_t	pid;
-	int		*readfd;
-	int		*writefd;
+	int		readfd[2];
+	int		writefd[2];
 }	t_proc;
 
 int		ft_pstderr(char *str);
@@ -135,8 +135,7 @@ int		ft_builtin_exit(char **argv, t_list **env);
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_child_exit(t_list **prcs, t_list **tkns, t_list **env);
-void	ft_child_execute(t_list **prcs, t_list **tkns, t_list **env);
+void	ft_child_execute(t_list **tkns, t_list **env);
 
 int		ft_builtin(char *cmd, t_list **env, uint8_t fake);
 int		ft_pipeline(t_list **tkns, t_list **env);
