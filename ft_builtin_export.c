@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/10 14:29:38 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:33:21 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void	ft_print_variables(t_list **env)
 	char	*str;
 
 	envp = ft_env_to_tab(*env);
-	ft_shellsort(envp, ft_lstsize(*env) - 1);
+	ft_shellsort(envp, ft_lstsize(*env) - 2);
 	i = 0;
 	while (envp[i])
 	{
