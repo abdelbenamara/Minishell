@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:11:43 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 15:18:30 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 20:10:28 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,21 @@ static void	ft_sigint(int signum)
 
 uint8_t	ft_signals(void)
 {
-	struct sigaction	act;
-	struct sigaction	no_act;
+	struct sigaction	usr_act;
+	struct sigaction	ign_act;
 
 	rl_event_hook = &ft_event_hook;
-	act.sa_handler = &ft_sigint;
-	act.sa_flags = 0;
-	if (sigemptyset(&(act.sa_mask)) == -1)
-		return (ft_perror("act sigemptyset"), 0);
-	if (sigaction(SIGINT, &act, NULL) == -1)
+	usr_act.sa_handler = &ft_sigint;
+	usr_act.sa_flags = 0;
+	if (sigemptyset(&(usr_act.sa_mask)) == -1)
+		return (ft_perror("usr_act sigemptyset"), 0);
+	if (sigaction(SIGINT, &usr_act, NULL) == -1)
 		return (ft_perror("SIGINT sigaction"), 0);
-	no_act.sa_handler = SIG_IGN;
-	no_act.sa_flags = 0;
-	if (sigemptyset(&(no_act.sa_mask)) == -1)
-		return (ft_perror("no_act sigemptyset"), 0);
-	if (sigaction(SIGQUIT, &no_act, NULL) == -1)
+	ign_act.sa_handler = SIG_IGN;
+	ign_act.sa_flags = 0;
+	if (sigemptyset(&(ign_act.sa_mask)) == -1)
+		return (ft_perror("ign_act sigemptyset"), 0);
+	if (sigaction(SIGQUIT, &ign_act, NULL) == -1)
 		return (ft_perror("SIGQUIT sigaction"), 0);
 	return (1);
 }
