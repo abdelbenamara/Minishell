@@ -6,11 +6,26 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:23:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 14:51:00 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 19:40:47 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+uint8_t	ft_default_signals(void)
+{
+	struct sigaction	dfl_act;
+
+	dfl_act.sa_handler = SIG_DFL;
+	dfl_act.sa_flags = 0;
+	if (sigemptyset(&(dfl_act.sa_mask)) == -1)
+		return (ft_perror("dfl_act sigemptyset"), 0);
+	if (sigaction(SIGINT, &dfl_act, NULL) == -1)
+		return (ft_perror("SIGINT sigaction"), 0);
+	if (sigaction(SIGQUIT, &dfl_act, NULL) == -1)
+		return (ft_perror("SIGQUIT sigaction"), 0);
+	return (1);
+}
 
 static char	*ft_realpath(t_list **env, char *filename, char *filename_path)
 {
@@ -71,7 +86,7 @@ void	ft_child_execute(t_list **prcs, t_list **tkns, t_list **env)
 
 	if (!ft_redirect(tkns, env, 0))
 		(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
-	if (!ft_child_signals())
+	if (!ft_default_signals())
 		(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
 	if (!(*tkns))
 		(ft_child_exit(prcs, tkns, env), exit(EXIT_SUCCESS));
