@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 13:07:05 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 19:38:38 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,6 @@ static uint8_t	ft_is_builtin(t_list *lst, t_list **env)
 	return (0);
 }
 
-static void	ft_debug(t_list *lst)
-{
-	ft_printf("\033[01;33m[DEBUG] tkns : [ %s", lst->content);
-	while (lst->next)
-		(ft_printf(", %s", lst->next->content), lst = lst->next);
-	ft_printf(" ]\033[00m\n");
-}
-
 int	ft_line_process(char **line, t_list **env)
 {
 	t_list	*tkns;
@@ -84,7 +76,6 @@ int	ft_line_process(char **line, t_list **env)
 	if (!tkns)
 		return (EXIT_SUCCESS);
 	(free(*line), *line = NULL);
-	ft_debug(tkns);
 	if (!ft_tkn_count(tkns, "|") && ft_is_builtin(tkns, env))
 	{
 		if (!ft_redirect(&tkns, env, 1))
