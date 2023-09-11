@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:23:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 19:40:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 22:52:22 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,18 +80,18 @@ static int	ft_execve(char *cmd, t_list **env)
 	return (ft_tab_free(envp), ft_tab_free(argv), free(path), code);
 }
 
-void	ft_child_execute(t_list **prcs, t_list **tkns, t_list **env)
+void	ft_child_execute(t_list **tkns, t_list **env)
 {
 	int	code;
 
 	if (!ft_redirect(tkns, env, 0))
-		(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
+		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_FAILURE));
 	if (!ft_default_signals())
-		(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
+		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_FAILURE));
 	if (!(*tkns))
-		(ft_child_exit(prcs, tkns, env), exit(EXIT_SUCCESS));
-	code = ft_builtin((*tkns)->content, env, 1);
+		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_SUCCESS));
+	code = ft_builtin((*tkns)->content, env, 0);
 	if (code == 127 && g_signum != SIGTERM)
 		code = ft_execve((*tkns)->content, env);
-	(ft_child_exit(prcs, tkns, env), exit(code));
+	(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(code));
 }
