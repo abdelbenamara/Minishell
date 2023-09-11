@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 01:55:06 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/08 02:00:30 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/09 23:56:00 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_env_gets(t_list **env, char *key)
 	t_list	*lst;
 	t_list	*prv;
 
-	if (!key)
+	if (!env || !key)
 		return (NULL);
 	len = ft_strlen(key);
 	lst = *env;

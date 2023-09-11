@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_setup_command.c                                 :+:      :+:    :+:   */
+/*   ft_command_setup.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 17:19:43 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/06 00:43:25 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/10 11:45:32 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ static size_t	ft_save_character(char *str, char c)
 	return (i);
 }
 
-static size_t	ft_extract_characters(char *str, char c, uint8_t quoted)
+static size_t	ft_handle_quoted_sequence(char *str, char c, uint8_t quote)
 {
 	char	q;
 	size_t	i;
 	size_t	j;
 
 	i = ft_save_character(str, c);
-	if (quoted)
+	if (quote)
 		return (i);
 	q = str[0];
 	str[0] = str[1];
@@ -53,7 +53,7 @@ static size_t	ft_extract_characters(char *str, char c, uint8_t quoted)
 	return (i);
 }
 
-char	*ft_setup_command(char *cmd, char c, uint8_t quoted)
+char	*ft_command_setup(char *cmd, char c, uint8_t quote)
 {
 	char	*str;
 	size_t	i;
@@ -66,8 +66,10 @@ char	*ft_setup_command(char *cmd, char c, uint8_t quoted)
 	{
 		if (str[i] == '\t')
 			str[i] = ' ';
-		else if ((str[i] == '\'' || str[i] == '"') && ft_is_quoted(str + i))
-			i += ft_extract_characters(str + i, c, quoted);
+		else if (str[i] == '"' && ft_is_quoted(str + i))
+			i += ft_handle_quoted_sequence(str + i, c, quote);
+		else if (str[i] == '\'' && ft_is_quoted(str + i))
+			i += ft_handle_quoted_sequence(str + i, c, quote);
 		++i;
 	}
 	return (str);

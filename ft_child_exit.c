@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_check_export_identifier.c                       :+:      :+:    :+:   */
+/*   ft_child_exit.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/11 14:21:13 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/30 18:40:08 by abenamar         ###   ########.fr       */
+/*   Created: 2023/09/09 18:05:41 by abenamar          #+#    #+#             */
+/*   Updated: 2023/09/11 09:14:39 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-uint8_t	ft_check_export_identifier(char *str)
+void	ft_child_exit(t_list **prcs, t_list **tkns, t_list **env)
 {
-	size_t	i;
+	int		*readfd;
+	int		*writefd;
 
-	if (!ft_isalpha(str[0]) && str[0] != '_')
-		return (0);
-	i = 0;
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		++i;
-	if (str[i] && str[i] != '=')
-		return (0);
-	return (1);
+	readfd = ((t_proc *)(*prcs)->content)->readfd;
+	writefd = ((t_proc *)(*prcs)->content)->writefd;
+	if (readfd)
+		close(readfd[1]);
+	if (writefd)
+		close(writefd[0]);
+	ft_lstclear(prcs, &ft_prc_del);
+	ft_lstclear(tkns, &free);
+	ft_lstclear(env, &free);
 }

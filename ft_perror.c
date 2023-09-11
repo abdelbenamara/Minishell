@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 16:18:45 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/10 17:44:41 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/10 13:35:16 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,5 @@
 
 int	ft_perror(char *str)
 {
-	return (ft_dprintf(STDERR_FILENO, \
-		"minishell: %s: %s\n", str, strerror(errno)));
+	return (ft_pstderr2(str, strerror(errno)));
 }

@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin_and_free.c                              :+:      :+:    :+:   */
+/*   ft_tab_free.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/01 19:56:55 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/01 19:59:02 by abenamar         ###   ########.fr       */
+/*   Created: 2023/08/05 02:38:00 by abenamar          #+#    #+#             */
+/*   Updated: 2023/09/10 13:27:31 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*ft_strjoin_and_free(char *s1, char *s2)
+void	ft_tab_free(char **tab)
 {
-	char	*str;
+	size_t	i;
 
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-		return (s2);
-	if (!s2)
-		return (s1);
-	str = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (str);
+	if (!tab)
+		return ;
+	i = 0;
+	while (tab[i])
+		(free(tab[i]), ++i);
+	free(tab);
 }

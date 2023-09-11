@@ -6,30 +6,13 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/07 23:59:17 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 09:32:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static uint8_t	ft_read_script(char *filename)
-{
-	int	pipefd[2];
-
-	if (pipe(pipefd) == -1)
-		return (ft_perror("pipe"), 0);
-	if (dup2(pipefd[0], STDIN_FILENO) == -1)
-		return (ft_perror("dup2"), 0);
-	if (!ft_redirect_input(filename, pipefd))
-		return (0);
-	if (close(pipefd[1]))
-		return (ft_perror("close"), 0);
-	if (close(pipefd[0]))
-		return (ft_perror("close"), 0);
-	return (1);
-}
-
-static t_list	*ft_init_env(char **ep)
+static t_list	*ft_env(char **ep)
 {
 	t_list	*env;
 	size_t	i;
@@ -46,11 +29,10 @@ static t_list	*ft_init_env(char **ep)
 	}
 	ft_env_puts(&env, "?", "0");
 	ft_env_puts(&env, "OLDPWD", ft_env_gets(&env, "OLDPWD"));
-	ft_env_puti(&env, "!exit", ft_env_geti(&env, "SHLVL"));
 	return (env);
 }
 
-static char	*ft_get_prompt(t_list **env)
+static char	*ft_prompt(t_list **env)
 {
 	const char	*home = ft_env_gets(env, "HOME");
 	size_t		len;
@@ -79,18 +61,17 @@ static char	*ft_get_prompt(t_list **env)
 	return (free(cwd), prompt);
 }
 
-static char	*ft_handle_line(t_list **env)
+static char	*ft_readline(t_list **env)
 {
 	char	*line;
 	char	*str;
 
 	if (isatty(STDIN_FILENO))
 	{
-		line = ft_get_prompt(env);
+		line = ft_prompt(env);
 		str = readline(line);
 		if (!str)
-			return (ft_env_puti(env, "SHLVL", ft_env_geti(env, "SHLVL") - 1), \
-				ft_printf("exit\n"), g_signum = SIGTERM, free(line), NULL);
+			return (ft_printf("exit\n"), g_signum = SIGTERM, free(line), NULL);
 	}
 	else
 	{
@@ -103,7 +84,7 @@ static char	*ft_handle_line(t_list **env)
 		add_history(str);
 	(free(line), line = ft_strtrim(str, " "), free(str));
 	if (!g_signum && line && *line)
-		ft_env_puti(env, "?", ft_process_line(&line, env));
+		ft_env_puti(env, "?", ft_line_process(&line, env));
 	return (line);
 }
 
@@ -113,18 +94,17 @@ int	main(int ac, char **av, char **ep)
 	char	*line;
 	int		code;
 
-	if (!ft_handle_signals())
+	if (!ft_signals())
 		return (EXIT_FAILURE);
-	if (ac > 1 && !ft_read_script(av[1]))
+	if (ac > 1 && !ft_redirect_input(av[1], NULL, 0, 0))
 		return (EXIT_FAILURE);
-	env = ft_init_env(ep);
+	env = ft_env(ep);
 	line = NULL;
-	while (g_signum != SIGTERM || (isatty(STDIN_FILENO)
-			&& ft_env_geti(&env, "SHLVL") >= ft_env_geti(&env, "!exit")))
+	while (g_signum != SIGTERM)
 	{
 		free(line);
 		g_signum = 0;
-		line = ft_handle_line(&env);
+		line = ft_readline(&env);
 		if (g_signum == SIGINT)
 			ft_env_puts(&env, "?", "130");
 		if (ft_env_gets(&env, "!pipe"))

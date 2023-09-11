@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_redirect_output.c                               :+:      :+:    :+:   */
+/*   ft_append_output.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:33:31 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 09:58:52 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 09:59:05 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-uint8_t	ft_redirect_output(char *file, t_list **env, size_t rout, uint8_t fake)
+uint8_t	ft_append_output(char *file, t_list **env, size_t rout, uint8_t fake)
 {
 	char	**argv;
 	int		fd;
@@ -20,7 +20,7 @@ uint8_t	ft_redirect_output(char *file, t_list **env, size_t rout, uint8_t fake)
 	argv = ft_command_split(file, env, ' ', 1);
 	if (!argv || argv[1])
 		return (ft_pstderr2(file, "ambiguous redirect"), ft_tab_free(argv), 0);
-	fd = open(argv[0], O_WRONLY | O_CREAT | O_TRUNC, \
+	fd = open(argv[0], O_WRONLY | O_CREAT | O_APPEND, \
 		S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	if (fd == -1)
 		return (ft_perror(argv[0]), ft_tab_free(argv), 0);

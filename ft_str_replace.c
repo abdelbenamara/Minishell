@@ -1,28 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_handle_child_signals.c                          :+:      :+:    :+:   */
+/*   ft_str_replace.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/06 11:29:24 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/06 16:30:15 by abenamar         ###   ########.fr       */
+/*   Created: 2023/09/09 22:13:37 by abenamar          #+#    #+#             */
+/*   Updated: 2023/09/09 22:14:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-uint8_t	ft_handle_child_signals(void)
+char	*ft_str_replace(char *str, char c1, char c2)
 {
-	struct sigaction	act;
+	size_t	i;
 
-	act.sa_handler = SIG_DFL;
-	act.sa_flags = 0;
-	if (sigemptyset(&(act.sa_mask)) == -1)
-		return (ft_perror("act sigemptyset"), 0);
-	if (sigaction(SIGINT, &act, NULL) == -1)
-		return (ft_perror("SIGINT sigaction"), 0);
-	if (sigaction(SIGQUIT, &act, NULL) == -1)
-		return (ft_perror("SIGQUIT sigaction"), 0);
-	return (1);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c1)
+			str[i] = c2;
+		++i;
+	}
+	return (str);
 }

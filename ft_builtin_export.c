@@ -6,30 +6,11 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/31 17:04:37 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/10 14:29:38 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	**ft_lst_to_tab(t_list *lst)
-{
-	char	**tab;
-	size_t	i;
-
-	tab = malloc((ft_lstsize(lst) + 1) * sizeof(char *));
-	if (!tab)
-		return (NULL);
-	i = 0;
-	while (lst)
-	{
-		tab[i] = ft_strdup(lst->content);
-		lst = lst->next;
-		++i;
-	}
-	tab[i] = NULL;
-	return (tab);
-}
 
 static void	ft_shellsort(char **tab, int size)
 {
@@ -60,30 +41,56 @@ static void	ft_shellsort(char **tab, int size)
 	}
 }
 
-static void	ft_print_environment_variables(t_list **env)
+static void	ft_print_variables(t_list **env)
 {
-	char	**tab;
+	char	**envp;
 	size_t	i;
 	char	*str;
 
-	tab = ft_lst_to_tab(*env);
-	ft_shellsort(tab, ft_lstsize(*env));
+	envp = ft_env_to_tab(*env);
+	ft_shellsort(envp, ft_lstsize(*env) - 1);
 	i = 0;
-	while (tab[i])
+	while (envp[i])
 	{
-		if (ft_strncmp(tab[i], "?=", 2) && ft_strncmp(tab[i], "!pipe=", 6)
-			&& ft_strncmp(tab[i], "!exit=", 6) && ft_strncmp(tab[i], "_=", 2))
+		if (ft_strncmp(envp[i], "_=", 2))
 		{
-			str = ft_strchr(tab[i], '=');
+			str = ft_strchr(envp[i], '=');
 			*str = '\0';
-			ft_printf("declare -x %s", tab[i]);
+			ft_printf("declare -x %s", envp[i]);
 			if (*(str + 1))
 				(ft_printf("=\"%s\"", str + 1));
 			ft_printf("\n");
 		}
 		++i;
 	}
-	ft_free_tab(tab);
+	ft_tab_free(envp);
+}
+
+static uint8_t	ft_check_identifier(char *str)
+{
+	size_t	i;
+
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
+	i = 0;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		++i;
+	if (str[i] && str[i] != '=')
+		return (0);
+	return (1);
+}
+
+static void	ft_export_variable(char *var, t_list **env)
+{
+	char	*str;
+
+	str = ft_strchr(var, '=');
+	if (str)
+	{
+		*str = '\0';
+		str += 1;
+	}
+	ft_env_puts(env, var, str);
 }
 
 int	ft_builtin_export(char **argv, t_list **env)
@@ -92,19 +99,21 @@ int	ft_builtin_export(char **argv, t_list **env)
 	size_t	i;
 
 	if (!(argv[1]))
-		return (ft_print_environment_variables(env), EXIT_SUCCESS);
+		return (ft_print_variables(env), EXIT_SUCCESS);
 	if (!ft_strncmp(argv[1], "-", 1))
 		return (ft_pstderr3("export", argv[1], "invalid option"), 2);
 	code = EXIT_SUCCESS;
 	i = 1;
 	while (argv[i])
 	{
-		if (!ft_check_export_identifier(argv[i]))
+		if (!ft_check_identifier(argv[i]))
 		{
 			ft_dprintf(STDERR_FILENO, \
 				"export: `%s': not a valid identifier\n", argv[i]);
 			code = EXIT_FAILURE;
 		}
+		else
+			ft_export_variable(argv[i], env);
 		++i;
 	}
 	return (code);

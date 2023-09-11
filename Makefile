@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/06 11:30:57 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/11 09:28:49 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,21 +30,20 @@ LDLIBS += -lreadline
 #                                                                              #
 # **************************************************************************** #
 
-SRCS := ft_perror.c
-SRCS += ft_perror2.c
-SRCS += ft_pstderr.c
+SRCS := ft_pstderr.c
 SRCS += ft_pstderr2.c
 SRCS += ft_pstderr3.c
+SRCS += ft_perror.c
+SRCS += ft_perror2.c
 
-SRCS += ft_is_quoted.c
-
-SRCS += ft_strjoin_and_free.c
-
-SRCS += ft_free_tab.c
-
+SRCS += ft_tab_free.c
+SRCS += ft_prc_new.c
+SRCS += ft_prc_del.c
 SRCS += ft_lst_pop.c
 
-SRCS += ft_realpath.c
+SRCS += ft_str_replace.c
+SRCS += ft_is_quoted.c
+SRCS += ft_tkn_count.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -57,14 +56,19 @@ SRCS += ft_env_geti.c
 SRCS += ft_env_puts.c
 SRCS += ft_env_puti.c
 
+SRCS += ft_env_to_tab.c
+
+SRCS += ft_expand.c
+
 # **************************************************************************** #
 #                                                                              #
 #                                   signals                                    #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS += ft_handle_signals.c
-SRCS += ft_handle_child_signals.c
+SRCS += ft_child_signals.c
+
+SRCS += ft_signals.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -72,32 +76,14 @@ SRCS += ft_handle_child_signals.c
 #                                                                              #
 # **************************************************************************** #
 
-SRCS += ft_parse_redirection.c
+SRCS += ft_is_redirection.c
 
 SRCS += ft_here_document.c
 SRCS += ft_redirect_input.c
 SRCS += ft_redirect_output.c
+SRCS += ft_append_output.c
 
-SRCS += ft_is_redirection.c
-
-# **************************************************************************** #
-#                                                                              #
-#                                   builtins                                   #
-#                                                                              #
-# **************************************************************************** #
-
-SRCS += ft_check_export_identifier.c
-
-SRCS += ft_builtin_echo.c
-SRCS += ft_builtin_pwd.c
-SRCS += ft_builtin_env.c
-SRCS += ft_builtin_exit.c
-
-SRCS += ft_builtin_skip.c
-
-SRCS += ft_builtin_cd.c
-SRCS += ft_builtin_export.c
-SRCS += ft_builtin_unset.c
+SRCS += ft_redirect.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -105,23 +91,37 @@ SRCS += ft_builtin_unset.c
 #                                                                              #
 # **************************************************************************** #
 
-SRCS += ft_parse_commands.c
+SRCS += ft_command_setup.c
+SRCS += ft_command_split.c
 
-SRCS += ft_setup_command.c
-SRCS += ft_clean_argument.c
-SRCS += ft_parse_arguments.c
+# **************************************************************************** #
+#                                                                              #
+#                                   builtins                                   #
+#                                                                              #
+# **************************************************************************** #
 
-SRCS += ft_execute_builtin.c
-SRCS += ft_execute_command.c
+SRCS += ft_builtin_echo.c
+SRCS += ft_builtin_cd.c
+SRCS += ft_builtin_pwd.c
+SRCS += ft_builtin_export.c
+SRCS += ft_builtin_unset.c
+SRCS += ft_builtin_env.c
+SRCS += ft_builtin_exit.c
 
-SRCS += ft_handle_input.c
-SRCS += ft_handle_exit.c
-SRCS += ft_handle_builtin.c
-SRCS += ft_handle_minishell.c
-SRCS += ft_handle_output.c
-SRCS += ft_handle_pipe.c
+# **************************************************************************** #
+#                                                                              #
+#                                  executions                                  #
+#                                                                              #
+# **************************************************************************** #
 
-SRCS += ft_process_line.c
+SRCS += ft_child_exit.c
+SRCS += ft_child_execute.c
+
+SRCS += ft_builtin.c
+SRCS += ft_pipeline.c
+
+SRCS += ft_line_to_tokens.c
+SRCS += ft_line_process.c
 
 SRCS += minishell.c
 

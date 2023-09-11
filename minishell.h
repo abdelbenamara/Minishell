@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/06 11:30:40 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 09:28:39 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,21 +44,27 @@
 #  define __PROMPT	"\033[00m \033[01;35mminishell\033[00m:\033[01;34m"
 # endif
 
-int		ft_perror(char *str);
-int		ft_perror2(char *s1, char *s2);
+typedef struct s_proc
+{
+	pid_t	pid;
+	int		*readfd;
+	int		*writefd;
+}	t_proc;
+
 int		ft_pstderr(char *str);
 int		ft_pstderr2(char *s1, char *s2);
 int		ft_pstderr3(char *s1, char *s2, char *s3);
+int		ft_perror(char *str);
+int		ft_perror2(char *s1, char *s2);
 
-size_t	ft_is_quoted(char *str);
-
-char	*ft_strjoin_and_free(char *s1, char *s2);
-
-void	ft_free_tab(char **tab);
-
+void	ft_tab_free(char **tab);
+t_proc	*ft_prc_new(void);
+void	ft_prc_del(void *proc);
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
 
-char	*ft_realpath(t_list **env, char *filename, char *filename_path);
+char	*ft_str_replace(char *str, char c1, char c2);
+size_t	ft_is_quoted(char *str);
+size_t	ft_tkn_count(t_list *lst, char *str);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -71,6 +77,10 @@ int		ft_env_geti(t_list **env, char *key);
 void	ft_env_puts(t_list **env, char *key, char *value);
 void	ft_env_puti(t_list **env, char *key, int value);
 
+char	**ft_env_to_tab(t_list *lst);
+
+char	*ft_expand(char *cmd, t_list **env, uint8_t dquoted, uint8_t hdoc);
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                  signals                                   */
@@ -79,8 +89,9 @@ void	ft_env_puti(t_list **env, char *key, int value);
 
 extern int	g_signum;
 
-uint8_t	ft_handle_signals(void);
-uint8_t	ft_handle_child_signals(void);
+uint8_t	ft_child_signals(void);
+
+uint8_t	ft_signals(void);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -88,36 +99,14 @@ uint8_t	ft_handle_child_signals(void);
 /*                                                                            */
 /* ************************************************************************** */
 
-# ifndef DLINES_MAX
-#  define DLINES_MAX	32
-# endif
-
-char	*ft_parse_redirection(char c, char *cmd, t_list **cmds);
-
-uint8_t	ft_here_document(char *limiter, int *writefd);
-uint8_t	ft_redirect_input(char *filename, int *writefd);
-uint8_t	ft_redirect_output(char *filename, int openflag, int *readfd);
-
 uint8_t	ft_is_redirection(char *cmd);
 
-/* ************************************************************************** */
-/*                                                                            */
-/*                                  builtins                                  */
-/*                                                                            */
-/* ************************************************************************** */
+uint8_t	ft_here_document(char *limiter, t_list **env, size_t rin, uint8_t fake);
+uint8_t	ft_redirect_input(char *file, t_list **env, size_t rin, uint8_t fake);
+uint8_t	ft_redirect_output(char *file, t_list **env, size_t rout, uint8_t fake);
+uint8_t	ft_append_output(char *file, t_list **env, size_t rout, uint8_t fake);
 
-uint8_t	ft_check_export_identifier(char *str);
-
-int		ft_builtin_echo(char **argv, t_list **env);
-int		ft_builtin_pwd(char **argv, t_list **env);
-int		ft_builtin_env(char **argv, t_list **env);
-int		ft_builtin_exit(char **argv, t_list **env);
-
-int		ft_builtin_skip(char **argv, t_list **env);
-
-int		ft_builtin_cd(char **argv, t_list **env);
-int		ft_builtin_export(char **argv, t_list **env);
-int		ft_builtin_unset(char **argv, t_list **env);
+uint8_t	ft_redirect(t_list **tkns, t_list **env, uint8_t fake);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -125,22 +114,36 @@ int		ft_builtin_unset(char **argv, t_list **env);
 /*                                                                            */
 /* ************************************************************************** */
 
-t_list	**ft_parse_commands(char *eline, t_list **cmds);
+char	*ft_command_setup(char *cmd, char c, uint8_t quote);
+char	**ft_command_split(char *cmd, t_list **env, char c, uint8_t expand);
 
-char	*ft_setup_command(char *cmd, char c, uint8_t quoted);
-char	*ft_clean_argument(char *str, char c);
-char	**ft_parse_arguments(char *cmd, char c, uint8_t quoted);
+/* ************************************************************************** */
+/*                                                                            */
+/*                                  builtins                                  */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		ft_execute_builtin(char *cmd, t_list **env);
-int		ft_execute_command(char *cmd, t_list **env);
+int		ft_builtin_echo(char **argv, t_list **env);
+int		ft_builtin_cd(char **argv, t_list **env);
+int		ft_builtin_pwd(char **argv, t_list **env);
+int		ft_builtin_export(char **argv, t_list **env);
+int		ft_builtin_unset(char **argv, t_list **env);
+int		ft_builtin_env(char **argv, t_list **env);
+int		ft_builtin_exit(char **argv, t_list **env);
 
-int		ft_handle_input(t_list **cmds, int *writefd);
-int		ft_handle_exit(t_list **cmds, t_list **env, int wstatus);
-int		ft_handle_builtin(t_list **cmds, t_list **env, int fd, int wstatus);
-int		ft_handle_minishell(t_list **cmds, t_list **env, int wstatus);
-int		ft_handle_output(t_list **cmds, int *readfd, int fd, int wstatus);
-int		ft_handle_pipe(t_list **cmds, t_list **env, int *writefd, int *readfd);
+/* ************************************************************************** */
+/*                                                                            */
+/*                                 executions                                 */
+/*                                                                            */
+/* ************************************************************************** */
 
-int		ft_process_line(char **line, t_list **env);
+void	ft_child_exit(t_list **prcs, t_list **tkns, t_list **env);
+void	ft_child_execute(t_list **prcs, t_list **tkns, t_list **env);
+
+int		ft_builtin(char *cmd, t_list **env, uint8_t fake);
+int		ft_pipeline(t_list **tkns, t_list **env);
+
+t_list	**ft_line_to_tokens(char *line, t_list **tkns);
+int		ft_line_process(char **line, t_list **env);
 
 #endif

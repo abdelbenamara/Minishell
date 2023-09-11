@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_pop.c                                       :+:      :+:    :+:   */
+/*   ft_prc_new.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/02 21:47:38 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/09 18:00:37 by abenamar         ###   ########.fr       */
+/*   Created: 2023/09/10 22:26:33 by abenamar          #+#    #+#             */
+/*   Updated: 2023/09/10 22:27:33 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_lst_pop(t_list **lst, void (*del)(void *))
+t_proc	*ft_prc_new(void)
 {
-	t_list	*tmp;
+	t_proc	*proc;
 
-	if (!lst || !(*lst) || !del)
-		return ;
-	tmp = *lst;
-	*lst = tmp->next;
-	ft_lstdelone(tmp, del);
+	proc = malloc(sizeof(t_proc));
+	if (!proc)
+		return (NULL);
+	proc->pid = -1;
+	proc->readfd = NULL;
+	proc->writefd = NULL;
+	return (proc);
 }

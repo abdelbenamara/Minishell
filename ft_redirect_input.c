@@ -6,35 +6,26 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:04:18 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/11 18:28:41 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 09:58:29 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-uint8_t	ft_redirect_input(char *filename, int *writefd)
+uint8_t	ft_redirect_input(char *file, t_list **env, size_t rin, uint8_t fake)
 {
-	const uint8_t	device = !ft_strncmp(filename, "/dev/", 5);
-	int				fd;
-	char			*str;
-	size_t			dlines;
+	char	**argv;
+	int		fd;
 
-	fd = open(filename, O_RDONLY);
+	argv = ft_command_split(file, env, ' ', 1);
+	if (!argv || argv[1])
+		return (ft_pstderr2(file, "ambiguous redirect"), ft_tab_free(argv), 0);
+	fd = open(argv[0], O_RDONLY);
 	if (fd == -1)
-		return (ft_perror(filename), 0);
-	str = get_next_line(fd);
-	dlines = 0;
-	while (dlines < DLINES_MAX && str)
-	{
-		ft_putstr_fd(str, writefd[1]);
-		free(str);
-		str = get_next_line(fd);
-		if (device && str && str[ft_strlen(str) - 1] == '\n')
-			++dlines;
-	}
+		return (ft_perror(argv[0]), ft_tab_free(argv), 0);
+	if (!rin && !fake && dup2(fd, STDIN_FILENO) == -1)
+		return (ft_perror2("dup2", argv[0]), 0);
 	if (close(fd) == -1)
-		return (ft_perror(filename), free(str), 0);
-	if (g_signum == SIGINT)
-		return (ft_printf("\n"), free(str), 0);
-	return (free(str), 1);
+		return (ft_perror2("close", argv[0]), 0);
+	return (ft_tab_free(argv), 1);
 }
