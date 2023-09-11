@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 10:05:48 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:07:05 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	ft_line_process(char **line, t_list **env)
 	if (!ft_check_syntax(*line))
 		return (2);
 	tkns = NULL;
-	if (!ft_line_to_tokens(*line, &tkns))
+	if (!ft_line_parse(*line, &tkns))
 		return (ft_lstclear(&tkns, &free), EXIT_FAILURE);
 	if (!tkns)
 		return (EXIT_SUCCESS);
