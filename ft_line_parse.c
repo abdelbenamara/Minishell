@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_line_to_tokens.c                                :+:      :+:    :+:   */
+/*   ft_line_parse.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 17:58:39 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 12:41:22 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:05:20 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static char	*ft_search_redirection(char *op, char *cmd, t_list **tkns)
 	return (free(cmd), ft_str_replace(tmp, '\n', op[0]));
 }
 
-t_list	**ft_line_to_tokens(char *line, t_list **tkns)
+t_list	**ft_line_parse(char *line, t_list **tkns)
 {
 	char	**strs;
 	size_t	i;
