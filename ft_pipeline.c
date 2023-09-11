@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 10:09:48 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/11 13:44:11 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 	if (!cpid)
 	{
 		rl_clear_history();
-		if (!ft_child_signals())
-			(ft_child_exit(prcs, tkns, env), exit(EXIT_FAILURE));
 		readfd = ((t_proc *)(*prcs)->content)->readfd;
 		writefd = ((t_proc *)(*prcs)->content)->writefd;
 		if (!ft_child_setup(readfd, writefd))
