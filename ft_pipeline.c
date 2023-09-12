@@ -6,15 +6,15 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 22:53:03 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/12 09:17:32 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static uint8_t	ft_child_setup(int *readfd, int *writefd)
+static uint8_t	ft_child_setup(t_list *lst, int *readfd, int *writefd)
 {
-	if (readfd[0])
+	if (readfd[0] && !(ft_tkn_count(lst, "<<") + ft_tkn_count(lst, "<")))
 	{
 		if (close(readfd[1]) == -1)
 			return (ft_perror("close"), 0);
@@ -45,7 +45,8 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 	if (!cpid)
 	{
 		rl_clear_history();
-		if (!ft_child_setup(((t_proc *)(*prcs)->content)->readfd, \
+		if (!ft_child_setup(*tkns, \
+				((t_proc *)(*prcs)->content)->readfd, \
 				((t_proc *)(*prcs)->content)->writefd))
 			(ft_lstclear(prcs, &ft_prc_del), ft_lstclear(tkns, &free), \
 				ft_lstclear(env, &free), exit(EXIT_FAILURE));
