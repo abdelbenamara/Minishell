@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 17:58:39 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 02:03:04 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 14:20:08 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static size_t	ft_add_redirection(char *str, t_list **tkns)
 	j = ft_is_quoted(str + i);
 	if (!j)
 		j = 1;
-	while (str[i + j] && str[i + j] != ' ')
+	while (str[i + j] && str[i + j] != ' '
+		&& str[i + j] != '<' && str[i + j] != '>')
 		++j;
 	return (ft_lstadd_back(tkns, ft_lstnew(ft_str_replace(\
 		ft_str_replace(ft_substr(str, i, j), -3, '<'), -4, '>'))), i + j);
