@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 00:15:31 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 09:31:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 04:09:44 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,19 @@ static uint8_t	ft_redirection_type(char *str)
 	return (0);
 }
 
-uint8_t	ft_redirect(t_list **tkns, t_list **env, uint8_t fake)
+static uint8_t	ft_handle_here_document(char *str, size_t last)
+{
+	if (last)
+	{
+		if (dup2(ft_atoi(str), STDIN_FILENO) == -1)
+			return (ft_perror("dup2"), 0);
+		if (close(ft_atoi(str)) == -1)
+			return (ft_perror("close"), 0);
+	}
+	return (1);
+}
+
+uint8_t	ft_redirect(t_list **tkns, t_list **env)
 {
 	uint8_t	type;
 
@@ -33,18 +45,18 @@ uint8_t	ft_redirect(t_list **tkns, t_list **env, uint8_t fake)
 		return (1);
 	type = ft_redirection_type((*tkns)->content);
 	ft_lst_pop(tkns, &free);
-	if (type == 1 && !ft_here_document((*tkns)->content, env, \
-			ft_tkn_count(*tkns, "<<") + ft_tkn_count(*tkns, "<"), fake))
+	if (type == 1 && !ft_handle_here_document((*tkns)->content, \
+			!(ft_tkn_count(*tkns, "<<", 0) + ft_tkn_count(*tkns, "<", 0))))
 		return (0);
 	if (type == 2 && !ft_redirect_input((*tkns)->content, env, \
-			ft_tkn_count(*tkns, "<<") + ft_tkn_count(*tkns, "<"), fake))
+			!(ft_tkn_count(*tkns, "<<", 0) + ft_tkn_count(*tkns, "<", 0))))
 		return (0);
-	if (type == 3 && !ft_append_output((*tkns)->content, env, \
-			ft_tkn_count(*tkns, ">>") + ft_tkn_count(*tkns, ">"), fake))
+	if (type == 3 && !ft_redirect_output((*tkns)->content, O_APPEND, env, \
+			!(ft_tkn_count(*tkns, ">>", 0) + ft_tkn_count(*tkns, ">", 0))))
 		return (0);
-	if (type == 4 && !ft_redirect_output((*tkns)->content, env, \
-			ft_tkn_count(*tkns, ">>") + ft_tkn_count(*tkns, ">"), fake))
+	if (type == 4 && !ft_redirect_output((*tkns)->content, O_TRUNC, env, \
+			!(ft_tkn_count(*tkns, ">>", 0) + ft_tkn_count(*tkns, ">", 0))))
 		return (0);
 	ft_lst_pop(tkns, &free);
-	return (ft_redirect(tkns, env, fake));
+	return (ft_redirect(tkns, env));
 }
