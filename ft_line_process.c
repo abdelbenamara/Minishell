@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:20:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:28:30 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,24 @@ static uint8_t	ft_check_syntax(char *str)
 	return (1);
 }
 
-static uint8_t	ft_handle_here_documents(t_list *lst, t_list **env)
+static void	ft_close_here_documents(t_list *lst)
 {
+	while (ft_tkn_count(lst, "<<", 1))
+	{
+		if (!ft_strncmp(lst->content, "<<", 3))
+		{
+			lst = lst->next;
+			ft_close(ft_atoi(lst->content));
+		}
+		lst = lst->next;
+	}
+}
+
+static uint8_t	ft_handle_here_documents(t_list **tkns, t_list **env)
+{
+	t_list	*lst;
+
+	lst = *tkns;
 	while (ft_tkn_count(lst, "<<", 1))
 	{
 		if (!ft_strncmp(lst->content, "<<", 3))
@@ -63,29 +79,18 @@ static uint8_t	ft_handle_here_documents(t_list *lst, t_list **env)
 			lst = lst->next;
 			if (!ft_here_document((char **) &(lst->content), env, \
 					!(ft_tkn_count(lst, "<<", 0) + ft_tkn_count(lst, "<", 0))))
-				return (0);
+				return (ft_close_here_documents(*tkns), 0);
 		}
 		lst = lst->next;
 	}
 	return (1);
 }
 
-static void	ft_handle_builtin(t_list *lst, t_list **env)
-{
-	while (lst && ft_is_redirection(lst->content))
-	{
-		if (!ft_strncmp(lst->content, "<<", 3))
-			close(ft_atoi(lst->next->content));
-		lst = lst->next->next;
-	}
-	if (lst)
-		ft_builtin(lst->content, env, 1);
-}
-
 int	ft_line_process(char **line, t_list **env)
 {
 	t_list	*tkns;
 	int		code;
+	t_list	*lst;
 
 	if (!ft_check_syntax(*line))
 		return (2);
@@ -95,10 +100,14 @@ int	ft_line_process(char **line, t_list **env)
 	if (!tkns)
 		return (EXIT_SUCCESS);
 	(free(*line), *line = NULL);
-	if (!ft_handle_here_documents(tkns, env))
+	if (!ft_handle_here_documents(&tkns, env))
 		return (ft_lstclear(&tkns, &free), EXIT_FAILURE);
 	code = ft_pipeline(&tkns, env);
-	if (tkns)
-		ft_handle_builtin(tkns, env);
+	lst = tkns;
+	ft_close_here_documents(lst);
+	while (lst && ft_is_redirection(lst->content))
+		lst = lst->next->next;
+	if (lst)
+		ft_builtin(lst->content, env, 1);
 	return (ft_lstclear(&tkns, &free), code);
 }
