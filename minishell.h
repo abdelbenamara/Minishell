@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:19:44 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:34:26 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ char	*ft_str_replace(char *str, char c1, char c2);
 size_t	ft_is_quoted(char *str);
 size_t	ft_tkn_count(t_list *lst, char *str, uint8_t all);
 int		ft_close(int fd);
+long	ft_atol(const char *nptr);
+char	*ft_ltoa(long n);
 
 /* ************************************************************************** */
 /*                                                                            */
