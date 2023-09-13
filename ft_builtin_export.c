@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:20:12 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 05:49:45 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static uint8_t	ft_check_identifier(char *str, uint8_t silent)
 	{
 		if (!silent)
 			ft_dprintf(STDERR_FILENO, \
-				"export: `%s': not a valid identifier\n", str);
+				"minishell: export: `%s': not a valid identifier\n", str);
 		return (0);
 	}
 	i = 0;
@@ -84,7 +84,7 @@ static uint8_t	ft_check_identifier(char *str, uint8_t silent)
 	{
 		if (!silent)
 			ft_dprintf(STDERR_FILENO, \
-				"export: `%s': not a valid identifier\n", str);
+				"minishell: export: `%s': not a valid identifier\n", str);
 		return (0);
 	}
 	return (1);
@@ -126,7 +126,7 @@ int	ft_builtin_export(char *cmd, char **argv, t_list **env, uint8_t silent)
 			ft_print_variables(env);
 		return (EXIT_SUCCESS);
 	}
-	if (!ft_strncmp(argv[1], "-", 1))
+	if (argv[1][0] == '-')
 	{
 		if (!silent)
 			ft_pstderr3("export", argv[1], "invalid option");
