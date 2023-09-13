@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/02 14:33:31 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 01:09:06 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:37:55 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ uint8_t	ft_redirect_output(char *file, int oflag, t_list **env, size_t last)
 
 	argv = ft_command_split(file, env, ' ', 1);
 	if (!argv || argv[1])
-		return (ft_pstderr2(file, "ambiguous redirect"), ft_tab_free(argv), 0);
+		return (ft_pstderr2(file, ": ambiguous redirect"), \
+			ft_tab_free(argv), 0);
 	fd = open(argv[0], O_WRONLY | O_CREAT | oflag, \
 		S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	if (fd == -1)
