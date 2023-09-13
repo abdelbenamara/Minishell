@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:22:50 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 06:23:31 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 		ft_lstclear(prcs, &ft_prc_del);
 		return (ft_execute(tkns, env), 1);
 	}
-	((t_proc *)(*prcs)->content)->pid = cpid;
 	if (((t_proc *)(*prcs)->content)->readfd[0])
 	{
 		if (close(((t_proc *)(*prcs)->content)->readfd[1]) == -1)
@@ -63,7 +62,7 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 		if (close(((t_proc *)(*prcs)->content)->readfd[0]) == -1)
 			return (ft_perror("close"), 0);
 	}
-	return (1);
+	return (((t_proc *)(*prcs)->content)->pid = cpid, 1);
 }
 
 int	ft_wait(t_list **prcs, int code)
