@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:06:00 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:47:59 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:36:20 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	ft_builtin_pwd(char *cmd, char **argv, t_list **env, uint8_t silent)
 	if (argv[1] && argv[1][0] == '-')
 	{
 		if (!silent)
-			ft_pstderr3("pwd", argv[1], "invalid option");
+			ft_pstderr3("pwd: ", argv[1], ": invalid option");
 		return (2);
 	}
 	cwd = getcwd(NULL, 0);
