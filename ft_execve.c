@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 13:35:24 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:36:27 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:50:02 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ int	ft_execve(char *cmd, t_list **env)
 	if ((*path || ft_is_empty_command(cmd, env)) && !ft_strchr(path, '/'))
 		(ft_pstderr2(path, ": command not found"), code = 127);
 	else if (*path && access(path, F_OK) == -1)
-		(ft_perror(path), code = 127);
+		(ft_perror2(path, ": "), code = 127);
 	else if (*path && access(path, X_OK) == -1)
-		(ft_perror(path), code = 126);
+		(ft_perror2(path, ": "), code = 126);
 	else if (*path && execve(path, argv, envp) == -1)
-		(ft_perror(path), code = EXIT_FAILURE);
+		(ft_perror2(path, ": "), code = EXIT_FAILURE);
 	return (ft_tab_free(envp), ft_tab_free(argv), free(path), code);
 }
