@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:49:45 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 13:23:03 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static uint8_t	ft_check_identifier(char *str, uint8_t silent)
 		return (0);
 	}
 	i = 0;
-	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+	while (ft_isalnum(str[i]) || str[i] == '_')
 		++i;
 	if (str[i] && str[i] != '=')
 	{
