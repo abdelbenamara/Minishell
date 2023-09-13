@@ -6,13 +6,13 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:11:01 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:35:45 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:04:18 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_print_variables(t_list **env)
+static uint8_t	ft_print_variables(t_list **env)
 {
 	t_list	*lst;
 
@@ -22,10 +22,14 @@ static void	ft_print_variables(t_list **env)
 		if (ft_strncmp(lst->content, "?=", 2))
 		{
 			if (*(ft_strchr(((char *) lst->content), '=') + 1))
-				ft_printf("%s\n", lst->content);
+			{
+				if (printf("%s\n", (char *) lst->content) < 0)
+					return (ft_pstderr("write error"), 0);
+			}
 		}
 		lst = lst->next;
 	}
+	return (1);
 }
 
 int	ft_builtin_env(char *cmd, char **argv, t_list **env, uint8_t silent)
@@ -47,6 +51,7 @@ int	ft_builtin_env(char *cmd, char **argv, t_list **env, uint8_t silent)
 	}
 	if (silent)
 		return (EXIT_SUCCESS);
-	ft_print_variables(env);
+	if (!ft_print_variables(env))
+		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
