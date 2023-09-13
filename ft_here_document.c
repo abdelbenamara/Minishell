@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:05:46 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 18:23:50 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 03:54:09 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ uint8_t	ft_read_document(char *limiter, t_list **env, int fd)
 	uint8_t	expand;
 	char	*eof;
 
+	if (!limiter)
+		return (0);
 	i = 0;
 	expand = 1;
 	while (limiter[i])
@@ -72,19 +74,19 @@ uint8_t	ft_read_document(char *limiter, t_list **env, int fd)
 		}
 		++i;
 	}
-	eof = ft_command_setup(limiter, '\n', 0);
+	eof = ft_command_setup(limiter, '\0', '\0', 0);
 	if (!eof)
 		return (0);
 	return (ft_read_lines(expand, env, eof, fd));
 }
 
-uint8_t	ft_here_document(char *limiter, t_list **env, size_t rin, uint8_t fake)
+uint8_t	ft_here_document(char **limiter, t_list **env, size_t last)
 {
 	int	pipefd[2];
 
 	if (pipe(pipefd) == -1)
 		return (ft_perror2("here_doc", "pipe"), 0);
-	if (!ft_read_document(limiter, env, pipefd[1]))
+	if (!ft_read_document(*limiter, env, pipefd[1]))
 	{
 		if (close(pipefd[1]) == -1)
 			ft_perror2("here_doc", "close");
@@ -94,9 +96,12 @@ uint8_t	ft_here_document(char *limiter, t_list **env, size_t rin, uint8_t fake)
 	}
 	if (close(pipefd[1]) == -1)
 		return (ft_perror2("here_doc", "close"), 0);
-	if (!rin && !fake && dup2(pipefd[0], STDIN_FILENO) == -1)
-		return (ft_perror2("here_doc", "dup2"), 0);
-	if (close(pipefd[0]) == -1)
+	if (last)
+	{
+		free(*limiter);
+		*limiter = ft_itoa(pipefd[0]);
+	}
+	else if (close(pipefd[0]) == -1)
 		return (ft_perror2("here_doc", "close"), 0);
 	return (1);
 }
