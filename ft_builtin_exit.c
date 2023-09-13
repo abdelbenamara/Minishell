@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:38:20 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:36:06 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:36:31 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,15 @@
 
 static uint8_t	ft_check_first_argument(char *str, uint8_t silent)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
+	if (str[0] == '-' || str[0] == '+')
+		++i;
 	while (str[i])
 	{
-		if (!i && (str[i] == '-' || str[0] == '+'))
-			++i;
 		if (!ft_isdigit(str[i]))
 		{
-			while (str[i] && str[i] == ' ')
-				++i;
 			if (!(str[i]))
 				return (1);
 			if (!silent && isatty(STDIN_FILENO))
@@ -39,21 +37,30 @@ static uint8_t	ft_check_first_argument(char *str, uint8_t silent)
 
 static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
 {
-	int	i;
+	size_t	i;
+	long	n;
+	char	*tmp;
 
 	i = 0;
-	while (str[i] && str[i] == ' ')
-		++i;
-	if (!(str[i]))
+	if (!str || !(str[i]))
 	{
 		if (!silent && isatty(STDIN_FILENO))
 			(ft_printf("exit\n"), \
 				ft_pstderr3("exit: ", str, ": numeric argument required"));
-		return (0);
+		return (free(str), 0);
 	}
 	if (!ft_check_first_argument(str + i, silent))
-		return (0);
-	return (1);
+		return (free(str), 0);
+	n = ft_atol(str);
+	tmp = ft_ltoa(n);
+	if (!tmp)
+		return (free(str), 0);
+	if (!ft_strncmp(str, tmp, ft_strlen(str) + 1))
+		return (free(str), free(tmp), 1);
+	if (!silent && isatty(STDIN_FILENO))
+		(ft_printf("exit\n"), \
+			ft_pstderr3("exit: ", str, ": numeric argument required"));
+	return (free(str), free(tmp), 0);
 }
 
 int	ft_builtin_exit(char *cmd, char **argv, t_list **env, uint8_t silent)
@@ -67,7 +74,7 @@ int	ft_builtin_exit(char *cmd, char **argv, t_list **env, uint8_t silent)
 			ft_printf("exit\n");
 		return (g_signum = SIGTERM, ft_env_geti(env, "?"));
 	}
-	if (!ft_handle_first_argument(argv[1], silent))
+	if (!ft_handle_first_argument(ft_strtrim(argv[1], " "), silent))
 		return (g_signum = SIGTERM, 2);
 	if (argv[1] && argv[2])
 	{
