@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:55:04 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/07 23:44:54 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/12 23:10:52 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ static uint8_t	ft_no_new_line(char *str)
 	return (1);
 }
 
-int	ft_builtin_echo(char **argv, t_list **env)
+int	ft_builtin_echo(char *cmd, char **argv, t_list **env, uint8_t silent)
 {
 	uint8_t	trailing_newline;
 	size_t	i;
 	size_t	j;
 
-	(void) env;
+	((void) cmd, (void) env);
 	trailing_newline = 1;
 	i = 1;
 	while (argv[i] && ft_no_new_line(argv[i]))
@@ -41,14 +41,16 @@ int	ft_builtin_echo(char **argv, t_list **env)
 		++i;
 	}
 	j = 0;
-	while (argv[i + j])
+	if (!silent)
 	{
-		if (j > 0)
-			ft_printf(" ");
-		ft_printf("%s", argv[i + j]);
-		++j;
+		while (argv[i + j])
+		{
+			if (j > 0)
+				ft_printf(" ");
+			(ft_printf("%s", argv[i + j]), ++j);
+		}
 	}
-	if (trailing_newline)
+	if (!silent && trailing_newline)
 		ft_printf("\n");
 	return (EXIT_SUCCESS);
 }
