@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/13 15:20:26 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/13 16:21:47 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,8 @@ SRCS += ft_str_replace.c
 SRCS += ft_is_quoted.c
 SRCS += ft_tkn_count.c
 SRCS += ft_close.c
+SRCS += ft_atol.c
+SRCS += ft_ltoa.c
 
 # **************************************************************************** #
 #                                                                              #
@@ -132,7 +134,6 @@ CC := cc
 CFLAGS := -Wall
 CFLAGS += -Wextra
 CFLAGS += -Werror
-CFLAGS += -g3
 
 RM := rm -f
 
