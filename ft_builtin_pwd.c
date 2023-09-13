@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 13:06:00 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:36:20 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:06:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ int	ft_builtin_pwd(char *cmd, char **argv, t_list **env, uint8_t silent)
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		return (ft_perror("getcwd"), EXIT_FAILURE);
+		return (ft_perror("getcwd: "), EXIT_FAILURE);
 	if (!silent)
-		ft_printf("%s\n", cwd);
+		if (printf("%s\n", cwd) < 0)
+			return (ft_pstderr("write error"), free(cwd), EXIT_FAILURE);
 	return (free(cwd), EXIT_SUCCESS);
 }
