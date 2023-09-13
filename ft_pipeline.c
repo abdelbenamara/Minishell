@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 06:23:31 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:29:21 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int	ft_pipeline(t_list **tkns, t_list **env)
 		while (*tkns && ft_strncmp((*tkns)->content, "|", 2))
 		{
 			if (!ft_strncmp((*tkns)->content, "<<", 3))
-				close(ft_atoi((*tkns)->next->content));
+				ft_close(ft_atoi((*tkns)->next->content));
 			ft_lst_pop(tkns, &free);
 		}
 		ft_lst_pop(tkns, &free);
