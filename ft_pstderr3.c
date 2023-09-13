@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 17:43:54 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:39:39 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:41:16 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	ft_pstderr3(char *s1, char *s2, char *s3)
 		str = ft_strjoin_and_free(str, ft_strdup(s3));
 	str = ft_strjoin_and_free(str, ft_strdup("\n"));
 	n = ft_strlen(str);
-	write(STDERR_FILENO, str, n * sizeof(char));
+	if (write(STDERR_FILENO, str, n * sizeof(char)) == -1)
+		return (-1);
 	free(str);
 	return (n);
 }
