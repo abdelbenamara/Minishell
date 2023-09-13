@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 00:15:31 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 04:09:44 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:13:48 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ static uint8_t	ft_handle_here_document(char *str, size_t last)
 	if (last)
 	{
 		if (dup2(ft_atoi(str), STDIN_FILENO) == -1)
-			return (ft_perror("dup2"), 0);
+			return (ft_perror("dup2: "), 0);
 		if (close(ft_atoi(str)) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 	}
 	return (1);
 }
