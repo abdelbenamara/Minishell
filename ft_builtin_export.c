@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 13:23:03 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:36:15 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ static uint8_t	ft_check_identifier(char *str, uint8_t silent)
 	if (!ft_isalpha(str[0]) && str[0] != '_')
 	{
 		if (!silent)
-			ft_dprintf(STDERR_FILENO, \
-				"minishell: export: `%s': not a valid identifier\n", str);
+			ft_pstderr3("export: `", str, "': not a valid identifier");
 		return (0);
 	}
 	i = 0;
@@ -83,8 +82,7 @@ static uint8_t	ft_check_identifier(char *str, uint8_t silent)
 	if (str[i] && str[i] != '=')
 	{
 		if (!silent)
-			ft_dprintf(STDERR_FILENO, \
-				"minishell: export: `%s': not a valid identifier\n", str);
+			ft_pstderr3("export: `", str, "': not a valid identifier");
 		return (0);
 	}
 	return (1);
@@ -129,7 +127,7 @@ int	ft_builtin_export(char *cmd, char **argv, t_list **env, uint8_t silent)
 	if (argv[1][0] == '-')
 	{
 		if (!silent)
-			ft_pstderr3("export", argv[1], "invalid option");
+			ft_pstderr3("export: ", argv[1], ": invalid option");
 		return (2);
 	}
 	return (ft_export_variables(argv, env, silent));
