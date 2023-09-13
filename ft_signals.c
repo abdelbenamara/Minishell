@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 17:11:43 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 20:10:28 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 04:40:12 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static int	ft_event_hook(void)
 static void	ft_sigint(int signum)
 {
 	g_signum = signum;
+	if (waitpid(-1, NULL, WUNTRACED) != -1)
+		ft_printf("\n");
 	while (waitpid(-1, NULL, WUNTRACED) != -1)
 		;
 	if (errno != ECHILD)
