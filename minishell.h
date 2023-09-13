@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 03:52:01 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 13:38:28 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	ft_lst_pop(t_list **lst, void (*del)(void *));
 char	*ft_str_replace(char *str, char c1, char c2);
 size_t	ft_is_quoted(char *str);
 size_t	ft_tkn_count(t_list *lst, char *str, uint8_t all);
+int		ft_close(int fd);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -134,6 +135,7 @@ int		ft_builtin_exit(char *cmd, char **argv, t_list **env, uint8_t silent);
 /*                                                                            */
 /* ************************************************************************** */
 
+int		ft_execve(char *cmd, t_list **env);
 void	ft_execute(t_list **tkns, t_list **env);
 int		ft_builtin(char *cmd, t_list **env, uint8_t silent);
 int		ft_pipeline(t_list **tkns, t_list **env);
