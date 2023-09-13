@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:19:37 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:42:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	*ft_readline(t_list **env)
 		line = ft_prompt(env);
 		str = readline(line);
 		if (!str)
-			return (ft_printf("exit\n"), g_signum = SIGTERM, free(line), NULL);
+			return (printf("exit\n"), g_signum = SIGTERM, free(line), NULL);
 	}
 	else
 	{
