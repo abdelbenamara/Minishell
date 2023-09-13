@@ -6,37 +6,56 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:38:20 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/09 18:52:06 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 01:58:47 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_print_exit(void)
-{
-	if (isatty(STDIN_FILENO))
-		ft_printf("exit\n");
-}
-
-int	ft_builtin_exit(char **argv, t_list **env)
+static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
 {
 	int	i;
 
-	if (!(argv[1]))
-		return (g_signum = SIGTERM, ft_print_exit(), ft_env_geti(env, "?"));
-	i = (argv[1][0] == '-');
-	while (argv[1][i])
+	i = 0;
+	while (str[i])
 	{
-		if (!ft_isdigit(argv[1][i]))
-			return (g_signum = SIGTERM, ft_print_exit(), \
-				ft_pstderr3("exit", argv[1], "numeric argument required"), 2);
+		if (!i && (str[i] == '-' || str[0] == '+'))
+			++i;
+		if (!ft_isdigit(str[i]))
+		{
+			if (!silent && isatty(STDIN_FILENO))
+				(ft_printf("exit\n"), \
+					ft_pstderr3("exit", str, "numeric argument required"));
+			return (0);
+		}
 		++i;
 	}
+	return (1);
+}
+
+int	ft_builtin_exit(char *cmd, char **argv, t_list **env, uint8_t silent)
+{
+	int	code;
+
+	(void) cmd;
+	if (!(argv[1]))
+	{
+		if (!silent && isatty(STDIN_FILENO))
+			ft_printf("exit\n");
+		return (g_signum = SIGTERM, ft_env_geti(env, "?"));
+	}
+	if (!ft_handle_first_argument(argv[1], silent))
+		return (g_signum = SIGTERM, 2);
 	if (argv[1] && argv[2])
-		return (ft_print_exit(), \
-			ft_pstderr2("exit", "too many arguments"), EXIT_FAILURE);
-	i = ft_atoi(argv[1]) % 256;
-	if (i < 0)
-		i += 256;
-	return (g_signum = SIGTERM, ft_print_exit(), i);
+	{
+		if (!silent && isatty(STDIN_FILENO))
+			(ft_printf("exit\n"), ft_pstderr2("exit", "too many arguments"));
+		return (EXIT_FAILURE);
+	}
+	code = ft_atoi(argv[1]) % 256;
+	if (code < 0)
+		code += 256;
+	if (!silent && isatty(STDIN_FILENO))
+		ft_printf("exit\n");
+	return (g_signum = SIGTERM, code);
 }
