@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/11 22:51:41 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/13 03:14:30 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,7 +79,6 @@ SRCS += ft_is_redirection.c
 SRCS += ft_here_document.c
 SRCS += ft_redirect_input.c
 SRCS += ft_redirect_output.c
-SRCS += ft_append_output.c
 
 SRCS += ft_redirect.c
 
@@ -112,8 +111,7 @@ SRCS += ft_builtin_exit.c
 #                                                                              #
 # **************************************************************************** #
 
-SRCS += ft_child_execute.c
-
+SRCS += ft_execute.c
 SRCS += ft_builtin.c
 SRCS += ft_pipeline.c
 
