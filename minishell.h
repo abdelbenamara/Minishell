@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 13:38:28 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:19:44 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ t_proc	*ft_prc_new(void);
 void	ft_prc_del(void *prc);
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
 
+char	*ft_strjoin_and_free(char *s1, char *s2);
 char	*ft_str_replace(char *str, char c1, char c2);
 size_t	ft_is_quoted(char *str);
 size_t	ft_tkn_count(t_list *lst, char *str, uint8_t all);
