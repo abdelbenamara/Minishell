@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 12:28:30 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:42:35 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ static uint8_t	ft_check_redirection(char *str)
 	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
 		++i;
 	if (str[i] == '|')
-		return (ft_printf("syntax error near unexpected token `|'\n"), 0);
+		return (printf("syntax error near unexpected token `|'\n"), 0);
 	if (str[0] != '|')
 	{
 		if (str[i] == '<')
-			return (ft_printf("syntax error near unexpected token `<'\n"), 0);
+			return (printf("syntax error near unexpected token `<'\n"), 0);
 		if (str[i] == '>')
-			return (ft_printf("syntax error near unexpected token `>'\n"), 0);
+			return (printf("syntax error near unexpected token `>'\n"), 0);
 	}
 	return (1);
 }
@@ -38,7 +38,7 @@ static uint8_t	ft_check_syntax(char *str)
 	size_t	i;
 
 	if (str[0] == '|')
-		return (ft_printf("syntax error near unexpected token `|'\n"), 0);
+		return (printf("syntax error near unexpected token `|'\n"), 0);
 	i = 0;
 	while (str[i])
 	{
@@ -50,7 +50,7 @@ static uint8_t	ft_check_syntax(char *str)
 	}
 	--i;
 	if (str[i] == '|' || str[i] == '<' || str[i] == '>')
-		return (ft_printf("syntax error near unexpected token `newline'\n"), 0);
+		return (printf("syntax error near unexpected token `newline'\n"), 0);
 	return (1);
 }
 
