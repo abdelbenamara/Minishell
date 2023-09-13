@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 22:52:40 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 03:52:01 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,12 @@ int		ft_perror2(char *s1, char *s2);
 
 void	ft_tab_free(char **tab);
 t_proc	*ft_prc_new(void);
-void	ft_prc_del(void *proc);
+void	ft_prc_del(void *prc);
 void	ft_lst_pop(t_list **lst, void (*del)(void *));
 
 char	*ft_str_replace(char *str, char c1, char c2);
 size_t	ft_is_quoted(char *str);
-size_t	ft_tkn_count(t_list *lst, char *str);
+size_t	ft_tkn_count(t_list *lst, char *str, uint8_t all);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -99,12 +99,11 @@ uint8_t	ft_signals(void);
 
 uint8_t	ft_is_redirection(char *cmd);
 
-uint8_t	ft_here_document(char *limiter, t_list **env, size_t rin, uint8_t fake);
-uint8_t	ft_redirect_input(char *file, t_list **env, size_t rin, uint8_t fake);
-uint8_t	ft_redirect_output(char *file, t_list **env, size_t rout, uint8_t fake);
-uint8_t	ft_append_output(char *file, t_list **env, size_t rout, uint8_t fake);
+uint8_t	ft_here_document(char **limiter, t_list **env, size_t last);
+uint8_t	ft_redirect_input(char *file, t_list **env, size_t last);
+uint8_t	ft_redirect_output(char *file, int oflag, t_list **env, size_t last);
 
-uint8_t	ft_redirect(t_list **tkns, t_list **env, uint8_t fake);
+uint8_t	ft_redirect(t_list **tkns, t_list **env);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -112,7 +111,7 @@ uint8_t	ft_redirect(t_list **tkns, t_list **env, uint8_t fake);
 /*                                                                            */
 /* ************************************************************************** */
 
-char	*ft_command_setup(char *cmd, char c, uint8_t quote);
+char	*ft_command_setup(char *cmd, char c1, char c2, uint8_t quote);
 char	**ft_command_split(char *cmd, t_list **env, char c, uint8_t expand);
 
 /* ************************************************************************** */
@@ -121,13 +120,13 @@ char	**ft_command_split(char *cmd, t_list **env, char c, uint8_t expand);
 /*                                                                            */
 /* ************************************************************************** */
 
-int		ft_builtin_echo(char **argv, t_list **env);
-int		ft_builtin_cd(char **argv, t_list **env);
-int		ft_builtin_pwd(char **argv, t_list **env);
-int		ft_builtin_export(char **argv, t_list **env);
-int		ft_builtin_unset(char **argv, t_list **env);
-int		ft_builtin_env(char **argv, t_list **env);
-int		ft_builtin_exit(char **argv, t_list **env);
+int		ft_builtin_echo(char *cmd, char **argv, t_list **env, uint8_t silent);
+int		ft_builtin_cd(char *cmd, char **argv, t_list **env, uint8_t silent);
+int		ft_builtin_pwd(char *cmd, char **argv, t_list **env, uint8_t silent);
+int		ft_builtin_export(char *cmd, char **argv, t_list **env, uint8_t silent);
+int		ft_builtin_unset(char *cmd, char **argv, t_list **env, uint8_t silent);
+int		ft_builtin_env(char *cmd, char **argv, t_list **env, uint8_t silent);
+int		ft_builtin_exit(char *cmd, char **argv, t_list **env, uint8_t silent);
 
 /* ************************************************************************** */
 /*                                                                            */
@@ -135,9 +134,8 @@ int		ft_builtin_exit(char **argv, t_list **env);
 /*                                                                            */
 /* ************************************************************************** */
 
-void	ft_child_execute(t_list **tkns, t_list **env);
-
-int		ft_builtin(char *cmd, t_list **env, uint8_t fake);
+void	ft_execute(t_list **tkns, t_list **env);
+int		ft_builtin(char *cmd, t_list **env, uint8_t silent);
 int		ft_pipeline(t_list **tkns, t_list **env);
 
 t_list	**ft_line_parse(char *line, t_list **tkns);
