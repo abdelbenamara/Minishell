@@ -6,13 +6,13 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:38:20 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 01:58:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 14:59:47 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
+static uint8_t	ft_check_first_argument(char *str, uint8_t silent)
 {
 	int	i;
 
@@ -23,6 +23,10 @@ static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
 			++i;
 		if (!ft_isdigit(str[i]))
 		{
+			while (str[i] && str[i] == ' ')
+				++i;
+			if (!(str[i]))
+				return (1);
 			if (!silent && isatty(STDIN_FILENO))
 				(ft_printf("exit\n"), \
 					ft_pstderr3("exit", str, "numeric argument required"));
@@ -30,6 +34,25 @@ static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
 		}
 		++i;
 	}
+	return (1);
+}
+
+static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] == ' ')
+		++i;
+	if (!(str[i]))
+	{
+		if (!silent && isatty(STDIN_FILENO))
+			(ft_printf("exit\n"), \
+				ft_pstderr3("exit", str, "numeric argument required"));
+		return (0);
+	}
+	if (!ft_check_first_argument(str + i, silent))
+		return (0);
 	return (1);
 }
 
