@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:23:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 13:38:51 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:50:51 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ static uint8_t	ft_default_signals(void)
 	dfl_act.sa_handler = SIG_DFL;
 	dfl_act.sa_flags = 0;
 	if (sigemptyset(&(dfl_act.sa_mask)) == -1)
-		return (ft_perror("dfl_act sigemptyset"), 0);
+		return (ft_perror("dfl_act sigemptyset: "), 0);
 	if (sigaction(SIGINT, &dfl_act, NULL) == -1)
-		return (ft_perror("SIGINT sigaction"), 0);
+		return (ft_perror("SIGINT sigaction: "), 0);
 	if (sigaction(SIGQUIT, &dfl_act, NULL) == -1)
-		return (ft_perror("SIGQUIT sigaction"), 0);
+		return (ft_perror("SIGQUIT sigaction: "), 0);
 	return (1);
 }
 
