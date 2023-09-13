@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 04:46:35 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 11:40:45 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:38:50 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char	*ft_handle_home(t_list **env, uint8_t silent)
 	if (!cwd)
 	{
 		if (!silent)
-			ft_pstderr2("cd", "HOME not set");
+			ft_pstderr("cd: HOME not set");
 		return (NULL);
 	}
 	return (cwd);
@@ -46,7 +46,7 @@ static char	*ft_handle_minus(t_list **env, uint8_t silent)
 	if (!cwd || !(*cwd))
 	{
 		if (!silent)
-			ft_pstderr2("cd", "OLDPWD not set");
+			ft_pstderr("cd: OLDPWD not set");
 		return (NULL);
 	}
 	if (!silent)
@@ -61,7 +61,7 @@ int	ft_builtin_cd(char *cmd, char **argv, t_list **env, uint8_t silent)
 	if (argv[1] && argv[2])
 	{
 		if (!silent)
-			ft_pstderr2("cd", "too many arguments");
+			ft_pstderr("cd: too many arguments");
 		return (EXIT_FAILURE);
 	}
 	cwd = argv[1];
