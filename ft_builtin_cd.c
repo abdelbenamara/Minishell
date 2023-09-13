@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 04:46:35 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/12 23:31:39 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 11:40:45 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ static char	*ft_check_for_empty_argument(char *cmd)
 
 	argv = ft_command_split(cmd, NULL, ' ', 0);
 	if (!argv || !(argv[1]))
-		return (NULL);
+		return (ft_tab_free(argv), NULL);
 	if (!ft_strncmp(argv[1], "\"\"", 3) || !ft_strncmp(argv[1], "''", 3))
-		return ("");
-	return (NULL);
+		return (ft_tab_free(argv), "");
+	return (ft_tab_free(argv), NULL);
 }
 
 static char	*ft_handle_home(t_list **env, uint8_t silent)
