@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 12:29:21 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 16:50:52 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,22 @@ static uint8_t	ft_pipe_setup(t_proc *prc, t_list *lst)
 	if (prc->readfd[0])
 	{
 		if (close(prc->readfd[1]) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 		if (!ft_tkn_count(lst, "<<", 0) && !ft_tkn_count(lst, "<", 0)
 			&& dup2(prc->readfd[0], STDIN_FILENO) == -1)
-			return (ft_perror("dup2"), 0);
+			return (ft_perror("dup2: "), 0);
 		if (close(prc->readfd[0]) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 	}
 	if (prc->writefd[1])
 	{
 		if (close(prc->writefd[0]) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 		if (!ft_tkn_count(lst, ">>", 0) && !ft_tkn_count(lst, ">", 0)
 			&& dup2(prc->writefd[1], STDOUT_FILENO) == -1)
-			return (ft_perror("dup2"), 0);
+			return (ft_perror("dup2: "), 0);
 		if (close(prc->writefd[1]) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 	}
 	return (1);
 }
@@ -45,7 +45,7 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 		return (0);
 	cpid = fork();
 	if (cpid == -1)
-		return (ft_perror("fork"), ft_lstclear(tkns, &free), 0);
+		return (ft_perror("fork: "), ft_lstclear(tkns, &free), 0);
 	if (!cpid)
 	{
 		rl_clear_history();
@@ -58,9 +58,9 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 	if (((t_proc *)(*prcs)->content)->readfd[0])
 	{
 		if (close(((t_proc *)(*prcs)->content)->readfd[1]) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 		if (close(((t_proc *)(*prcs)->content)->readfd[0]) == -1)
-			return (ft_perror("close"), 0);
+			return (ft_perror("close: "), 0);
 	}
 	return (((t_proc *)(*prcs)->content)->pid = cpid, 1);
 }
@@ -77,15 +77,15 @@ int	ft_wait(t_list **prcs, int code)
 	while (waitpid(-1, NULL, WUNTRACED) != -1)
 		;
 	if (errno != ECHILD)
-		return (ft_perror("wait"), EXIT_FAILURE);
+		return (ft_perror("wait: "), EXIT_FAILURE);
 	if (code != EXIT_SUCCESS)
 		return (code);
 	if (WIFSIGNALED(wstatus))
 	{
 		g_signum = WTERMSIG(wstatus);
 		if (g_signum == SIGQUIT)
-			ft_printf("Quit");
-		ft_printf("\n");
+			printf("Quit");
+		printf("\n");
 		return (128 + g_signum);
 	}
 	return (WEXITSTATUS(wstatus));
@@ -101,7 +101,7 @@ static uint8_t	ft_next_pipe(t_list **prcs, t_list **tkns)
 	if (ft_tkn_count(*tkns, "|", 1))
 	{
 		if (pipe(((t_proc *)(*prcs)->content)->writefd) == -1)
-			return (ft_perror("pipe"), 0);
+			return (ft_perror("pipe: "), 0);
 	}
 	return (1);
 }
