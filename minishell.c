@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 19:32:22 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 05:19:37 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	main(int ac, char **av, char **ep)
 
 	if (!ft_signals())
 		return (EXIT_FAILURE);
-	if (ac > 1 && !ft_redirect_input(av[1], NULL, 0, 0))
+	if (ac > 1 && !ft_redirect_input(av[1], NULL, 1))
 		return (EXIT_FAILURE);
 	env = ft_env(ep);
 	line = NULL;
@@ -107,8 +107,6 @@ int	main(int ac, char **av, char **ep)
 		line = ft_readline(&env);
 		if (g_signum == SIGINT)
 			ft_env_puts(&env, "?", "130");
-		if (ft_env_gets(&env, "!pipe"))
-			ft_lst_pop(&env, &free);
 	}
 	code = ft_env_geti(&env, "?");
 	return (rl_clear_history(), ft_lstclear(&env, &free), code);
