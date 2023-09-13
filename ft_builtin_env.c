@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:11:01 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 05:19:52 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:35:45 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ int	ft_builtin_env(char *cmd, char **argv, t_list **env, uint8_t silent)
 		if (argv[1][0] == '-')
 		{
 			if (!silent)
-				ft_pstderr3("env", argv[1], "invalid option");
+				ft_pstderr3("env: ", argv[1], ": invalid option");
 			return (125);
 		}
 		if (!silent)
-			ft_pstderr3("env", argv[1], "invalid argument");
+			ft_pstderr3("env: ", argv[1], ": invalid argument");
 		return (EXIT_FAILURE);
 	}
 	if (silent)
