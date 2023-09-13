@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 04:20:23 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/12 23:42:41 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 05:39:41 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	ft_builtin_unset(char *cmd, char **argv, t_list **env, uint8_t silent)
 	char	*var;
 
 	(void) cmd;
-	if (argv[1] && !ft_strncmp(argv[1], "-", 1))
+	if (argv[1] && argv[1][0] == '-')
 	{
 		if (!silent)
 			ft_pstderr3("unset", argv[1], "invalid option");
