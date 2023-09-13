@@ -6,13 +6,13 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:04:18 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 09:58:29 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 01:06:24 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-uint8_t	ft_redirect_input(char *file, t_list **env, size_t rin, uint8_t fake)
+uint8_t	ft_redirect_input(char *file, t_list **env, size_t last)
 {
 	char	**argv;
 	int		fd;
@@ -23,7 +23,7 @@ uint8_t	ft_redirect_input(char *file, t_list **env, size_t rin, uint8_t fake)
 	fd = open(argv[0], O_RDONLY);
 	if (fd == -1)
 		return (ft_perror(argv[0]), ft_tab_free(argv), 0);
-	if (!rin && !fake && dup2(fd, STDIN_FILENO) == -1)
+	if (last && dup2(fd, STDIN_FILENO) == -1)
 		return (ft_perror2("dup2", argv[0]), 0);
 	if (close(fd) == -1)
 		return (ft_perror2("close", argv[0]), 0);
