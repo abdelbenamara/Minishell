@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/13 13:38:38 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/13 15:20:26 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRCS += ft_prc_new.c
 SRCS += ft_prc_del.c
 SRCS += ft_lst_pop.c
 
+SRCS += ft_strjoin_and_free.c
 SRCS += ft_str_replace.c
 SRCS += ft_is_quoted.c
 SRCS += ft_tkn_count.c
