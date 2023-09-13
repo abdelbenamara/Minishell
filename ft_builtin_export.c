@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 15:36:15 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:07:47 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	ft_shellsort(char **tab, int size)
 	}
 }
 
-static void	ft_print_variables(t_list **env)
+static uint8_t	ft_print_variables(t_list **env)
 {
 	char	**envp;
 	size_t	i;
@@ -56,14 +56,17 @@ static void	ft_print_variables(t_list **env)
 		{
 			str = ft_strchr(envp[i], '=');
 			*str = '\0';
-			ft_printf("declare -x %s", envp[i]);
+			if (printf("declare -x %s", envp[i]) < 0)
+				return (ft_pstderr("write error"), ft_tab_free(envp), 0);
 			if (*(str + 1))
-				(ft_printf("=\"%s\"", str + 1));
-			ft_printf("\n");
+				if (printf("=\"%s\"", str + 1) < 0)
+					return (ft_pstderr("write error"), ft_tab_free(envp), 0);
+			if (printf("\n") < 0)
+				return (ft_pstderr("write error"), ft_tab_free(envp), 0);
 		}
 		++i;
 	}
-	ft_tab_free(envp);
+	return (ft_tab_free(envp), 1);
 }
 
 static uint8_t	ft_check_identifier(char *str, uint8_t silent)
