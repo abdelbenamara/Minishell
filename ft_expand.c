@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 14:00:30 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 12:49:01 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:19:57 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,6 @@ static char	*ft_get_variable(char *str, t_list **env, size_t *i, uint8_t hdoc)
 			ft_strdup(var), '\'', -1), '"', -2));
 	}
 	return (NULL);
-}
-
-static char	*ft_strjoin_and_free(char *s1, char *s2)
-{
-	char	*str;
-
-	if (!s1 && !s2)
-		return (NULL);
-	if (!s1)
-		return (s2);
-	if (!s2)
-		return (s1);
-	str = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (str);
 }
 
 char	*ft_expand(char *cmd, t_list **env, uint8_t dquoted, uint8_t hdoc)
