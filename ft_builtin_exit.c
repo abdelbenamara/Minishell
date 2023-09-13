@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 22:38:20 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 14:59:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:36:06 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static uint8_t	ft_check_first_argument(char *str, uint8_t silent)
 				return (1);
 			if (!silent && isatty(STDIN_FILENO))
 				(ft_printf("exit\n"), \
-					ft_pstderr3("exit", str, "numeric argument required"));
+					ft_pstderr3("exit: ", str, ": numeric argument required"));
 			return (0);
 		}
 		++i;
@@ -48,7 +48,7 @@ static uint8_t	ft_handle_first_argument(char *str, uint8_t silent)
 	{
 		if (!silent && isatty(STDIN_FILENO))
 			(ft_printf("exit\n"), \
-				ft_pstderr3("exit", str, "numeric argument required"));
+				ft_pstderr3("exit: ", str, ": numeric argument required"));
 		return (0);
 	}
 	if (!ft_check_first_argument(str + i, silent))
@@ -72,7 +72,7 @@ int	ft_builtin_exit(char *cmd, char **argv, t_list **env, uint8_t silent)
 	if (argv[1] && argv[2])
 	{
 		if (!silent && isatty(STDIN_FILENO))
-			(ft_printf("exit\n"), ft_pstderr2("exit", "too many arguments"));
+			(ft_printf("exit\n"), ft_pstderr("exit: too many arguments"));
 		return (EXIT_FAILURE);
 	}
 	code = ft_atoi(argv[1]) % 256;
