@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 14:00:30 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/10 13:17:44 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 12:49:01 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,18 @@ static char	*ft_get_variable(char *str, t_list **env, size_t *i, uint8_t hdoc)
 	char	*var;
 
 	j = 1;
-	while (ft_isalnum(str[(*i) + j]))
+	if (!ft_isalpha(str[(*i) + j])
+		&& str[(*i) + j] != '_' && str[(*i) + j] != '?')
+		return (++(*i), ft_strdup("$"));
+	while (ft_isalnum(str[(*i) + j]) || str[(*i) + j] == '_')
 		++j;
 	if (j == 1 && str[(*i) + j] == '?')
 		++j;
 	if (j == 1)
 		return (++(*i), ft_strdup("$"));
 	key = ft_substr(str, (*i) + 1, j - 1);
-	(*i) += j;
-	if (!key)
-		return (NULL);
 	var = ft_env_gets(env, key);
-	free(key);
+	(free(key), (*i) += j);
 	if (var)
 	{
 		if (hdoc)
