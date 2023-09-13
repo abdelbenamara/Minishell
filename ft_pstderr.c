@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 15:55:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/08/11 14:16:00 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 15:25:58 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,5 @@
 
 int	ft_pstderr(char *str)
 {
-	return (ft_dprintf(STDERR_FILENO, "minishell: %s\n", str));
+	return (ft_pstderr2(str, NULL));
 }
