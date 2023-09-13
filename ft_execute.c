@@ -1,18 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_child_execute.c                                 :+:      :+:    :+:   */
+/*   ft_execute.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:23:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/11 22:52:22 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 04:10:02 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-uint8_t	ft_default_signals(void)
+static void	ft_close_here_documents(t_list *lst)
+{
+	while (ft_tkn_count(lst, "<<", 1))
+	{
+		if (!ft_strncmp(lst->content, "<<", 3))
+		{
+			lst = lst->next;
+			close(ft_atoi(lst->content));
+		}
+		lst = lst->next;
+	}
+}
+
+static uint8_t	ft_default_signals(void)
 {
 	struct sigaction	dfl_act;
 
@@ -80,12 +93,14 @@ static int	ft_execve(char *cmd, t_list **env)
 	return (ft_tab_free(envp), ft_tab_free(argv), free(path), code);
 }
 
-void	ft_child_execute(t_list **tkns, t_list **env)
+void	ft_execute(t_list **tkns, t_list **env)
 {
 	int	code;
 
-	if (!ft_redirect(tkns, env, 0))
-		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_FAILURE));
+	if (!ft_redirect(tkns, env))
+		(ft_close_here_documents(*tkns), ft_lstclear(tkns, &free), \
+			ft_lstclear(env, &free), exit(EXIT_FAILURE));
+	ft_close_here_documents(*tkns);
 	if (!ft_default_signals())
 		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_FAILURE));
 	if (!(*tkns))
