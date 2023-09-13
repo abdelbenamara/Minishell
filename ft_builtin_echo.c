@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 12:55:04 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/12 23:10:52 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/13 17:04:00 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,27 @@ static uint8_t	ft_no_new_line(char *str)
 	return (1);
 }
 
+static uint8_t	ft_echo(char **argv, size_t i)
+{
+	size_t	j;
+
+	j = 0;
+	while (argv[i + j])
+	{
+		if (j > 0)
+			if (printf(" ") < 0)
+				return (ft_pstderr("write error"), 0);
+		if (printf("%s", argv[i + j]) < 0)
+			return (ft_pstderr("write error"), 0);
+		++j;
+	}
+	return (1);
+}
+
 int	ft_builtin_echo(char *cmd, char **argv, t_list **env, uint8_t silent)
 {
 	uint8_t	trailing_newline;
 	size_t	i;
-	size_t	j;
 
 	((void) cmd, (void) env);
 	trailing_newline = 1;
@@ -40,17 +56,13 @@ int	ft_builtin_echo(char *cmd, char **argv, t_list **env, uint8_t silent)
 		trailing_newline = 0;
 		++i;
 	}
-	j = 0;
 	if (!silent)
 	{
-		while (argv[i + j])
-		{
-			if (j > 0)
-				ft_printf(" ");
-			(ft_printf("%s", argv[i + j]), ++j);
-		}
+		if (!ft_echo(argv, i))
+			return (EXIT_FAILURE);
 	}
 	if (!silent && trailing_newline)
-		ft_printf("\n");
+		if (printf("\n") < 0)
+			return (ft_pstderr("write error"), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
