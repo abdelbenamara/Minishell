@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:54:15 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 16:34:26 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/15 11:40:54 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,10 @@ typedef struct s_proc
 int		ft_pstderr(char *str);
 int		ft_pstderr2(char *s1, char *s2);
 int		ft_pstderr3(char *s1, char *s2, char *s3);
+int		ft_pstderr4(char *s1, char *s2, char *s3, char *s4);
 int		ft_perror(char *str);
 int		ft_perror2(char *s1, char *s2);
+int		ft_perror3(char *s1, char *s2, char *s3);
 
 void	ft_tab_free(char **tab);
 t_proc	*ft_prc_new(void);
