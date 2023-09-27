@@ -6,34 +6,42 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/05 01:55:06 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/09 23:56:00 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/27 14:42:13 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void	ft_env_put_lru(t_list **env, t_list *prv, t_list *lst)
+{
+	if (prv)
+	{
+		prv->next = lst->next;
+		ft_lstadd_front(env, lst);
+	}
+}
+
 char	*ft_env_gets(t_list **env, char *key)
 {
-	size_t	len;
+	size_t	n;
 	t_list	*lst;
 	t_list	*prv;
+	char	*str;
 
 	if (!env || !key)
 		return (NULL);
-	len = ft_strlen(key);
+	n = ft_strlen(key);
 	lst = *env;
 	prv = NULL;
 	while (lst)
 	{
-		if (lst->content && !ft_strncmp(lst->content, key, len)
-			&& ((char *) lst->content)[len] == '=')
+		str = lst->content;
+		if (str && !ft_strncmp(str, key, n) && (str[n] == '=' || !(str[n])))
 		{
-			if (prv)
-			{
-				prv->next = lst->next;
-				ft_lstadd_front(env, lst);
-			}
-			return (lst->content + len + 1);
+			ft_env_put_lru(env, prv, lst);
+			if (!(str[n]))
+				return (str + n);
+			return (str + n + 1);
 		}
 		prv = lst;
 		lst = lst->next;
