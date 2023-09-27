@@ -5,9 +5,6 @@
 ```
 make
 ```
-```
-make bonus
-```
 
 ## Mandatory
 
