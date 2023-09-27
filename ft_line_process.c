@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 01:20:11 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 16:42:35 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/27 16:12:46 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,13 @@ int	ft_line_process(char **line, t_list **env)
 		return (EXIT_SUCCESS);
 	(free(*line), *line = NULL);
 	if (!ft_handle_here_documents(&tkns, env))
+	{
+		if (g_signum == SIGINT)
+			return (ft_lstclear(&tkns, &free), 130);
 		return (ft_lstclear(&tkns, &free), EXIT_FAILURE);
+	}
 	code = ft_pipeline(&tkns, env);
-	lst = tkns;
-	ft_close_here_documents(lst);
+	(ft_close_here_documents(tkns), lst = tkns);
 	while (lst && ft_is_redirection(lst->content))
 		lst = lst->next->next;
 	if (lst)
