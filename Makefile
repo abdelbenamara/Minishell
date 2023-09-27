@@ -6,7 +6,7 @@
 #    By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/30 18:50:37 by abenamar          #+#    #+#              #
-#    Updated: 2023/09/13 16:21:47 by abenamar         ###   ########.fr        #
+#    Updated: 2023/09/15 11:44:38 by abenamar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,10 @@ LDLIBS += -lreadline
 SRCS := ft_pstderr.c
 SRCS += ft_pstderr2.c
 SRCS += ft_pstderr3.c
+SRCS += ft_pstderr4.c
 SRCS += ft_perror.c
 SRCS += ft_perror2.c
+SRCS += ft_perror3.c
 
 SRCS += ft_tab_free.c
 SRCS += ft_prc_new.c
