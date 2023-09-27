@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 01:11:01 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 17:04:18 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/27 14:17:44 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static uint8_t	ft_print_variables(t_list **env)
 	{
 		if (ft_strncmp(lst->content, "?=", 2))
 		{
-			if (*(ft_strchr(((char *) lst->content), '=') + 1))
+			if (ft_strchr(((char *) lst->content), '='))
 			{
 				if (printf("%s\n", (char *) lst->content) < 0)
 					return (ft_pstderr("write error"), 0);
