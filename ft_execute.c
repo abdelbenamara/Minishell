@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 11:23:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 16:50:51 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/15 10:36:36 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_execute(t_list **tkns, t_list **env)
 	ft_close_here_documents(*tkns);
 	if (!ft_default_signals())
 		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_FAILURE));
-	if (!(*tkns))
+	if (!(*tkns) || !ft_strncmp((*tkns)->content, "|", 2))
 		(ft_lstclear(tkns, &free), ft_lstclear(env, &free), exit(EXIT_SUCCESS));
 	code = ft_builtin((*tkns)->content, env, 0);
 	if (code == 127 && g_signum != SIGTERM)
