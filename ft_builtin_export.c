@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 02:22:42 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 17:07:47 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/27 14:19:30 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,11 @@ static uint8_t	ft_print_variables(t_list **env)
 		if (ft_strncmp(envp[i], "_=", 2))
 		{
 			str = ft_strchr(envp[i], '=');
-			*str = '\0';
+			if (str)
+				*str = '\0';
 			if (printf("declare -x %s", envp[i]) < 0)
 				return (ft_pstderr("write error"), ft_tab_free(envp), 0);
-			if (*(str + 1))
+			if (str)
 				if (printf("=\"%s\"", str + 1) < 0)
 					return (ft_pstderr("write error"), ft_tab_free(envp), 0);
 			if (printf("\n") < 0)
