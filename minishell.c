@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/30 18:52:49 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 16:42:35 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/09/27 13:26:27 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ static char	*ft_readline(t_list **env)
 	(free(line), line = ft_strtrim(str, " "), free(str));
 	if (!g_signum && line && *line)
 		ft_env_puti(env, "?", ft_line_process(&line, env));
+	else if (g_signum == SIGINT)
+		ft_env_puts(env, "?", "130");
 	return (line);
 }
 
@@ -105,8 +107,6 @@ int	main(int ac, char **av, char **ep)
 		free(line);
 		g_signum = 0;
 		line = ft_readline(&env);
-		if (g_signum == SIGINT)
-			ft_env_puts(&env, "?", "130");
 	}
 	code = ft_env_geti(&env, "?");
 	return (rl_clear_history(), ft_lstclear(&env, &free), code);
