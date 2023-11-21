@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 15:05:46 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/13 17:10:30 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/11/21 01:32:50 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ by end-of-file (wanted `%s')\n", eof) < 0)
 	return (free(eof), 1);
 }
 
-uint8_t	ft_read_document(char *limiter, t_list **env, int fd)
+static uint8_t	ft_read_document(char *limiter, t_list **env, int fd)
 {
 	size_t	i;
 	uint8_t	expand;
