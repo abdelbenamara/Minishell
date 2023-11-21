@@ -6,7 +6,7 @@
 /*   By: abenamar <abenamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 18:02:17 by abenamar          #+#    #+#             */
-/*   Updated: 2023/09/27 14:06:01 by abenamar         ###   ########.fr       */
+/*   Updated: 2023/11/21 01:34:40 by abenamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static uint8_t	ft_fork(t_list **prcs, t_list **tkns, t_list **env)
 	return (((t_proc *)(*prcs)->content)->pid = cpid, 1);
 }
 
-int	ft_wait(t_list *prcs, int code)
+static int	ft_wait(t_list *prcs, int code)
 {
 	pid_t	cpid;
 	int		wstatus;
